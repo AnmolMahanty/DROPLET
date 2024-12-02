@@ -83,7 +83,7 @@ const questionnaire = {
         },
         {
           question: "How many times does your household do laundry in a week?",
-          options: ["1–2 times", "3–5 times", "More than 5 times"],
+          options: ["1-2 times", "3-5 times", "More than 5 times"],
         },
         {
           question: "How often do you mop the floors in your household?",
