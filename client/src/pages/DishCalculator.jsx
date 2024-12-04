@@ -30,10 +30,18 @@ const DishCalculator = () => {
     { product: "Kheer", waterFootprint: "800 liters", date: "2024-11-29" },
     { product: "Veg Burger", waterFootprint: "200 liters", date: "2024-11-30" },
     { product: "Biryani", waterFootprint: "500 liters", date: "2024-12-01" },
-    { product: "Sandwich", waterFootprint: "150 liters", date: "2024-11-25" },
-    { product: "Paneer", waterFootprint: "250 liters", date: "2024-11-26" },
-    { product: "Apple", waterFootprint: "50 liters", date: "2024-11-27" },
-    { product: "Chole Puri", waterFootprint: "300 liters", date: "2024-11-28" },
+    { product: "Wada pav", waterFootprint: "150 liters", date: "2024-11-25" },
+    {
+      product: "Paneer Tikka",
+      waterFootprint: "250 liters",
+      date: "2024-11-26",
+    },
+    { product: "Apple juice", waterFootprint: "50 liters", date: "2024-11-27" },
+    {
+      product: "Chicken Tikka",
+      waterFootprint: "300 liters",
+      date: "2024-11-28",
+    },
   ];
 
   const waterSavingTips = [
@@ -58,8 +66,8 @@ const DishCalculator = () => {
   ];
 
   return (
-    <div className=" container mx-auto p-6 space-y-6 min-h-[calc(100vh-64px)]">
-      <div className="grid gap-6 md:grid-cols-2 justify-center h-full">
+    <div className=" container flex flex-col justify-center mx-auto p-6 space-y-6 min-h-[calc(100vh-64px)]">
+      <div className="grid gap-6 md:grid-cols-2 justify-center h-full w-full max-w-[1280px]">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -172,7 +180,9 @@ const DishCalculator = () => {
                 </Button>
               )}
             </div>
-            <Button className="w-full">Calculate Water Footprint</Button>
+            <Button className="w-full bg-blue-950">
+              Calculate Water Footprint
+            </Button>
           </CardContent>
         </Card>
       </div>
