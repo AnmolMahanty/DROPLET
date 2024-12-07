@@ -66,8 +66,8 @@ const DishCalculator = () => {
   ];
 
   return (
-    <div className=" container flex flex-col justify-center mx-auto p-6 space-y-6 min-h-[calc(100vh-64px)]">
-      <div className="grid gap-6 md:grid-cols-2 justify-center h-full w-full max-w-[1280px]">
+    <div className=" container flex flex-col max-w-[1280px] justify-center items-center mx-auto p-6 space-y-6 min-h-[calc(100vh-64px)]">
+      <div className="grid gap-6 md:grid-cols-2 justify-center h-full w-full ">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
