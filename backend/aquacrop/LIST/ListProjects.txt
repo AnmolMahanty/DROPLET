@@ -1,1 +1,1 @@
-tomProj.PRO
+tom.PRO
