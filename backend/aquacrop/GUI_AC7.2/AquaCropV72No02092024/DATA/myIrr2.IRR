@@ -1,0 +1,11 @@
+
+   7.2   : AquaCrop Version (August 2024)
+   1     : Sprinkler irrigation
+ 100     : Percentage of soil surface wetted by irrigation
+   2     : Generate irrigation schedule
+   2     : Time criterion = allowable depletion amount
+   1     : Depth criterion = back to FC
+
+  From day    Depletion (mm)     Back to FC (+/- mm)       ECw (dS/m)
+=========================================================================
+       1             60                   0                   0.0

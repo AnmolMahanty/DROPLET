@@ -1,0 +1,20 @@
+Reference : Phanrang (Vietnam) - daily data: 1 January 1993 - 31 December 2007
+     3  : Monthly records (1=daily, 2=10-daily and 3=monthly data)
+     1  : First day of record (1, 11 or 21 for 10-day or 1 for months)
+     1  : First month of record
+  1901  : First year of record (1901 if not linked to a specific year)
+
+  Tmin (C)   TMax (C) 
+  =======================
+     21.83     29.10
+     22.19     30.23
+     23.38     31.32
+     24.73     32.65
+     25.54     33.79
+     25.53     34.18
+     25.40     33.77
+     25.27     33.68
+     24.68     32.66
+     24.09     31.01
+     23.57     29.88
+     22.75     28.57
