@@ -1,12 +1,12 @@
-const fs = require("fs");
-const xlsx = require("xlsx");
-const path = require("path");
+import { writeFileSync } from "fs";
+import { readFile, utils } from "xlsx";
+import { join } from "path";
 
 // Load crop parameter data from Excel
-const excelFilePath = path.join(__dirname, "Crop Parameters (1).xlsx"); // Replace with the actual filename
-const workbook = xlsx.readFile(excelFilePath);
+const excelFilePath = join(__dirname, "CropParameters.xlsx"); // Replace with the actual filename
+const workbook = readFile(excelFilePath);
 const sheetName = workbook.SheetNames[0];
-const cropData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+const cropData = utils.sheet_to_json(workbook.Sheets[sheetName]);
 
 /**
  * Convert frequency input (e.g., "Every 2 Days") to numeric interval.
@@ -21,28 +21,46 @@ function parseFrequency(frequency) {
     };
     return mapping[frequency] || 7; // Default to weekly irrigation
 }
-
+// {
+//   "answers": {
+//       "0": "eggplant",
+//       "1": "Mumbai",
+//       "2": "2024-12-11",
+//       "3": "Drip Irrigation",
+//       "4": "456",
+//       "5": "Borewell",
+//       "6": "4",
+//       "7": "4",
+//       "8": "5",
+//       "9": "4",
+//       "10": "Every 2 Days",
+//       "11": "Every 3 Days",
+//       "12": "Once a Week",
+//       "13": "Yes"
+//   },
+//   "timestamp": "2024-12-09T18:53:35.869Z"
+// }
 /**
  * Generate irrigation schedule based on crop phases and frequency.
  * @param {Object} userInputs - Inputs from the user.
  * @returns {Object} Result with irrigation schedule and details.
  */
-function generateIrrigationSchedule(userInputs) {
-    const {
-        farmArea, // In m²
-        irrigationSystem,
-        motorHorsepower,
-        pipeDiameter, // In meters
-        waterVelocity, // In m/s
-        irrigationHoursPerSession,
-        irrigationSessionsPerWeek,
-        cropName,
-        sowingDate,
-        frequencies, // Irrigation frequencies for each phase
-    } = userInputs;
+export function generateIrrigationSchedule(userInputs) {
+      const cropName = jsonData["0"];
+  const location = jsonData["1"];
+  const sowingDate = jsonData["2"];
+  const irrigationSystem = jsonData["3"];
+  const farmArea = parseFloat(jsonData["4"]); // Assuming farmArea is a number
+  const waterSource = jsonData["5"];
+  const motorHorsepower = parseFloat(jsonData["6"]); // Assuming motorHorsepower is a number
+  const pipeDiameter = parseFloat(jsonData["7"]); // Assuming pipeDiameter is a number
+
+  const irrigationHoursPerSession = parseFloat(jsonData["8"]); // Assuming irrigationHoursPerSession is a number
+  const irrigationSessionsPerWeek = parseFloat(jsonData["9"]); // Assuming irrigationSessionsPerWeek is a number
+  const frequencies = [jsonData["10"], jsonData["11"], jsonData["12"]]; // Assuming frequencies are strings
 
     // Find the crop data
-    const cropInfo = cropData.find(crop => crop.Crop.toLowerCase() === cropName.toLowerCase());
+    const cropInfo = cropData.find(crop => crop.Crop.toLowerCase() === cropName.trim().toLowerCase());
     if (!cropInfo) throw new Error("Crop not found in database.");
 
     // Crop phases in days
@@ -69,21 +87,18 @@ function generateIrrigationSchedule(userInputs) {
 
     // Add initial phase irrigation days
     while (currentDay <= initialDays) {
-        console.log("ini"+currentDay);
         irrigationSchedule.push({ day: currentDay, depth: (totalWaterDepthPerWeek / 7).toFixed(2), ecw: 1.5 });
         currentDay += initialFrequency;
     }
 
     // Add growth phase irrigation days
     while (currentDay <= initialDays + growingDays) {
-        console.log("grow"+currentDay);
         irrigationSchedule.push({ day: currentDay, depth: (totalWaterDepthPerWeek / 7).toFixed(2), ecw: 1.5 });
         currentDay += growthFrequency;
     }
 
     // Add maturity phase irrigation days
     while (currentDay <= totalDays) {
-        console.log("total"+currentDay);
         irrigationSchedule.push({ day: currentDay, depth: (totalWaterDepthPerWeek / 7).toFixed(2), ecw: 1.5 });
         currentDay += maturityFrequency;
     }
@@ -102,8 +117,8 @@ function generateIrrigationSchedule(userInputs) {
     });
 
     // Save to .irr file
-    const outputPath = path.join(__dirname, `${cropName}_irrigation.irr`);
-    fs.writeFileSync(outputPath, irrFileContent);
+    const outputPath = join(__dirname, `${cropName}_irrigation.irr`);
+    writeFileSync(outputPath, irrFileContent);
 
     return {
         message: "Irrigation schedule generated successfully.",
@@ -131,29 +146,29 @@ function calculateFlowRate(area, velocity) {
     return area * velocity * 3600; // Convert seconds to hours
 }
 
-// Example usage
-const userInputs = {
-    farmArea: 10000, // m² (1 hectare)
-    irrigationSystem: "Drip Irrigation",
-    motorHorsepower: 5,
-    pipeDiameter: 0.2, // meters (10 cm)
-    waterVelocity: 2, // m/s
-    irrigationHoursPerSession: 5,
-    irrigationSessionsPerWeek: 2,
-    cropName: "Cabbage",
-    sowingDate: "2024-12-10",
-    frequencies: {
-        initial: "Every 2 Days",
-        growth: "Every 3 Days",
-        maturity: "Once a Week",
-    },
-};
+// // Example usage
+// const userInputs = {
+//     farmArea: 10000, // m² (1 hectare)
+//     irrigationSystem: "Drip Irrigation",
+//     motorHorsepower: 5,
+//     pipeDiameter: 0.2, // meters (10 cm)
+//     waterVelocity: 2, // m/s
+//     irrigationHoursPerSession: 5,
+//     irrigationSessionsPerWeek: 2,
+//     cropName: "Cabbage",
+//     sowingDate: "2024-12-10",
+//     frequencies: {
+//         initial: "Every 2 Days",
+//         growth: "Every 3 Days",
+//         maturity: "Once a Week",
+//     },
+// };
 
-try {
-    const result = generateIrrigationSchedule(userInputs);
-    console.log(result.message);
-    console.log("File Path:", result.filePath);
-    console.log("Irrigation Details:", result.irrigationDetails);
-} catch (error) {
-    console.error("Error:", error.message);
-}
+// try {
+//     const result = generateIrrigationSchedule(userInputs);
+//     console.log(result.message);
+//     console.log("File Path:", result.filePath);
+//     console.log("Irrigation Details:", result.irrigationDetails);
+// } catch (error) {
+//     console.error("Error:", error.message);
+// }

@@ -6,17 +6,17 @@
   34720         : First day of cropping period - 22 January 1996  
   34829         : Last day of cropping period - 10 May 1996      
 -- 1. Climate (CLI) file
-   Patancheru.CLI
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   dombivli.cli
+   C:\sarthak\DROPLET\backend\routes\
    1.1 Temperature (Tnx or TMP) file
-   Patancheru.Tnx
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   dombivli.tnx
+   C:\sarthak\DROPLET\backend\routes\
    1.2 Reference ET (ETo) file
-   Patancheru.ETO
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   dombivli.eto
+   C:\sarthak\DROPLET\backend\routes\
    1.3 Rain (PLU) file
-   Patancheru.PLU
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   dombivli.plu
+   C:\sarthak\DROPLET\backend\routes\
    1.4 Atmospheric CO2 concentration (CO2) file
    MaunaLoa.CO2
    C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\SIMUL\

@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+import {  useNavigate } from "react-router-dom";
 
 const DailyCalculator = () => {
+  const navigate = useNavigate();
   const [questionnaire, setQuestionnaire] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -141,14 +144,21 @@ const DailyCalculator = () => {
       answers,
       timestamp: new Date().toISOString(), // optional metadata
     };
-  
+
     // Log the payload to the console for testing
     console.log("Payload to be submitted:", payload);
-  
+    sendToServer(payload);
+
     // You can also display a mock success message
     setCalculationResult({ message: "Data submission simulated successfully!" });
   }, [answers]);
-  
+
+  const sendToServer = async (payload) => {
+    await axios.post("http://localhost:5000/api/getData", payload).then(response => {
+      console.log(response);
+      navigate("/dashboard/farmerResult", { state: { ideal: [20, 20, 20, 20] } });
+    });
+  };
 
   // Loading state
   if (isLoading) {

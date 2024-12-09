@@ -10,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { useLocation } from "react-router-dom";
 
 // Register required Chart.js components
 ChartJS.register(
@@ -24,13 +25,16 @@ ChartJS.register(
 
 
 const FarmerResult = () => {
+  const location = useLocation();
+  const data = location.state?.ideal ? { ideal: location.state.ideal } : { ideal: [20, 60, 60, 80] };
+
   // Data for canopy development line chart
   const chartData = {
     labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
     datasets: [
       {
         label: "Canopy Development (Ideal)",
-        data: [20, 40, 60, 80],
+        data: data.ideal,
         borderColor: "#4caf50",
         backgroundColor: "rgba(76, 175, 80, 0.2)",
         tension: 0.4,

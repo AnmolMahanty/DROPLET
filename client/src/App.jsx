@@ -9,6 +9,7 @@ import DailyCalculator from "./pages/DailyCalculator";
 import FarmersCorner from "./pages/FarmerCorner";
 import NotFound from "./pages/NotFound";
 import Result from "./pages/Result";
+import FarmerResult from "./pages/FarmerResult";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="dishCalculator" element={<DishCalculator />} />
             <Route path="dailyCalculator" element={<DailyCalculator />} />
             <Route path="farmersCorner" element={<FarmersCorner />} />
+            <Route path="farmerResult" element = {<FarmerResult />} />
           </Route>
         </Routes>
       </Router>
