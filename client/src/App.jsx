@@ -8,6 +8,7 @@ import DishCalculator from "./pages/DishCalculator";
 import DailyCalculator from "./pages/DailyCalculator";
 import FarmersCorner from "./pages/FarmerCorner";
 import NotFound from "./pages/NotFound";
+import Result from "./pages/Result";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />}>
+            <Route path="result" element={<Result />} />
             <Route path="dishCalculator" element={<DishCalculator />} />
             <Route path="dailyCalculator" element={<DailyCalculator />} />
             <Route path="farmersCorner" element={<FarmersCorner />} />

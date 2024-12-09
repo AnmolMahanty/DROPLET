@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import {
   Table,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 const DishCalculator = () => {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const products = [
     { product: "Sandwich", waterFootprint: "150 liters", date: "2024-11-25" },
@@ -65,6 +67,9 @@ const DishCalculator = () => {
     },
   ];
 
+  const handleCalculateClick = () => {
+    navigate("/dashboard/result"); // Navigate to the Result page
+  };
   return (
     <div className=" container flex flex-col max-w-[1280px] justify-center items-center mx-auto p-6 space-y-6 min-h-[calc(100vh-64px)]">
       <div className="grid gap-6 md:grid-cols-2 justify-center h-full w-full ">
@@ -180,7 +185,10 @@ const DishCalculator = () => {
                 </Button>
               )}
             </div>
-            <Button className="w-full bg-blue-950">
+            <Button
+              onClick={handleCalculateClick}
+              className="w-full bg-blue-950"
+            >
               Calculate Water Footprint
             </Button>
           </CardContent>
