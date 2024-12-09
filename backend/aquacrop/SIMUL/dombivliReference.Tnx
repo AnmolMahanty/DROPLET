@@ -1,0 +1,20 @@
+Reference : dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API
+     3  : Monthly records (1=daily, 2=10-daily and 3=monthly data)
+     1  : First day of record (1, 11 or 21 for 10-day or 1 for months)
+     1  : First month of record
+  1901  : First year of record (1901 if not linked to a specific year)
+
+  Tmin (C)   TMax (C) 
+  =======================
+     17.37     32.37
+     18.35     36.32
+     20.98     36.78
+     24.21     39.60
+     26.53     37.90
+     26.07     33.12
+     24.74     28.37
+     24.60     29.43
+     24.22     29.59
+     23.38     33.18
+     20.89     33.96
+     10.09     16.77

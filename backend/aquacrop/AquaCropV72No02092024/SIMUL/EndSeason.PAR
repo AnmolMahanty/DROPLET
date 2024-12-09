@@ -1,0 +1,4 @@
+     0.0   : Daily average air temperature (°C) not reached in each of the days of a specified period
+     0     : Length of period (successive days) in which the daily average air temperature is less than the specified value
+    10.0   : Total growing degree days (°C) not reached in a specified number of successive days
+     8     : Length of period (successive days) in which the total GDD is less than the specified value

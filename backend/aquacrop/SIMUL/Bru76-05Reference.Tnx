@@ -1,0 +1,20 @@
+Reference : Brussels KMI (Belgium) - daily data: 1 January 1976 - 31 December 2005
+     3  : Monthly records (1=daily, 2=10-daily and 3=monthly data)
+     1  : First day of record (1, 11 or 21 for 10-day or 1 for months)
+     1  : First month of record
+  1901  : First year of record (1901 if not linked to a specific year)
+
+  Tmin (C)   TMax (C) 
+  =======================
+      0.73      5.42
+      0.86      6.45
+      3.38     10.22
+      5.22     13.41
+      8.92     17.83
+     11.57     20.37
+     13.60     22.48
+     13.48     22.53
+     10.98     18.84
+      8.04     14.70
+      4.03      9.26
+      1.86      6.30
