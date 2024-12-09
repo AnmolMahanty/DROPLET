@@ -1,27 +1,259 @@
-import React, { useEffect, useState } from "react";
-import Dashboard from "./Dashboard";
-import axios from "axios";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const FarmerCalculator = () => {
-  const [farmer, setFarmer] = useState([]);
+const DailyCalculator = () => {
+  const [questionnaire, setQuestionnaire] = useState(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [calculationResult, setCalculationResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Initialize questionnaire data
   useEffect(() => {
-    axios.post('http://localhost:5000/api/execute')
-      .then(response => {
-        // setQuestionnaire(response.data);
+    const FarmQuestionnaire = {
+      sections: [
+        {
+          section: "Farm Overview",
+          questions: [
+            {
+              question: "Enter the crop name?",
+              inputType: "dropdown",
+              options: ["eggplant", "jawara", "Rice"],
+            },
+            {
+              question: "Select your location?",
+              inputType: "dropdown",
+              options: ["Delhi", "Mumbai", "UP", "MP", "Add Sarthak"],
+            },
+            {
+              question: "SOWING DATE?",
+              inputType: "date",
+            },
+            {
+              question: "What irrigation system do you use?",
+              inputType: "dropdown",
+              options: [
+                "Drip Irrigation",
+                "Sprinkler Irrigation",
+                "Surface Irrigation (Basin)",
+                "Surface Irrigation (Border)",
+                "Surface Irrigation (Furrow)",
+              ],
+            },
+            {
+              question: "What is the total area of your farm?(Square Meters)",
+              inputType: "number",
+            },
+            {
+              question: "What is the primary source of water for irrigation?",
+              inputType: "dropdown",
+              options: ["Canal", "Borewell", "River"],
+            },
+            {
+              question: "If yes, what is the motor's horsepower (HP)?",
+              inputType: "number",
+            },
+            {
+              question: "What is the diameter of the pipe used for irrigation?(inches)",
+              inputType: "number",
+            },
+          ],
+        },
+        {
+          section: "Irrigation Scheduling",
+          questions: [
+            {
+              question: "How many hours do you irrigate in one session?",
+              inputType: "number",
+              unit: "Hours",
+            },
+            {
+              question: "How often do you irrigate your field in a week?",
+              inputType: "number",
+            },
+            {
+              question:
+                "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
+              inputType: "dropdown",
+              options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
+            },
+            {
+              question:
+                "What is the usual time interval between irrigation sessions during each crop growth phase?",
+              inputType: "dropdown",
+              options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
+            },
+            {
+              question:
+                "What is the usual time interval between irrigation sessions during each crop maturity phase?",
+              inputType: "dropdown",
+              options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
+            },
+            {
+              question: "Do you increase or decrease irrigation based on the crop phase?",
+              inputType: "dropdown",
+              options: ["Yes", "No"],
+            },
+          ],
+        },
+      ],
+    };
 
-        console.log(response);
-        setFarmer(response.data);
-      });
+    setQuestionnaire(FarmQuestionnaire);
+    setIsLoading(false);
   }, []);
-  return (
-    <>
-      <p>{farmer.output}</p>
-      <div className="flex items-center justify-center min-h-[calc(100vh-64px)] text-black">
-        FarmerCalculator
-      </div>
 
-    </>
+  // Memoize the questions
+  const questions = useMemo(
+    () =>
+      questionnaire
+        ? questionnaire.sections.flatMap((section) => section.questions)
+        : [],
+    [questionnaire]
+  );
+
+  // Navigation handlers
+  const handleNext = useCallback(() => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+    }
+  }, [currentQuestionIndex, questions.length]);
+
+  const handleBack = useCallback(() => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => prev - 1);
+    }
+  }, [currentQuestionIndex]);
+
+  const handleAnswerChange = useCallback(
+    (answer) => {
+      setAnswers((prev) => ({
+        ...prev,
+        [currentQuestionIndex]: answer,
+      }));
+    },
+    [currentQuestionIndex]
+  );
+
+  // Submit handler
+  const handleSubmit = useCallback(() => {
+    const payload = {
+      answers,
+      timestamp: new Date().toISOString(), // optional metadata
+    };
+  
+    // Log the payload to the console for testing
+    console.log("Payload to be submitted:", payload);
+  
+    // You can also display a mock success message
+    setCalculationResult({ message: "Data submission simulated successfully!" });
+  }, [answers]);
+  
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center justify-center min-h-screen bg-blue-50"
+      >
+        <p>Loading...</p>
+      </motion.div>
+    );
+  }
+
+  // Result view
+  if (calculationResult) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-blue-50">
+        <div className="bg-white shadow-lg rounded-lg p-8">
+          <h2 className="text-2xl font-bold mb-4">Submission Successful!</h2>
+          <p className="text-xl mb-4">Thank you for your submission.</p>
+          <button
+            onClick={() => setCalculationResult(null)}
+            className="bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            Submit Another Response
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Current question
+  const currentQuestion = questions[currentQuestionIndex];
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-blue-50">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-3/4">
+        <h2 className="text-xl font-bold mb-4">
+          Question {currentQuestionIndex + 1} of {questions.length}
+        </h2>
+        <p className="mb-4">{currentQuestion.question}</p>
+
+        <AnimatePresence mode="wait">
+          {currentQuestion.inputType === "number" && (
+            <input
+              type="number"
+              value={answers[currentQuestionIndex] || ""}
+              onChange={(e) => handleAnswerChange(e.target.value)}
+              className="w-full p-3 border rounded-lg mb-4"
+            />
+          )}
+          {currentQuestion.inputType === "dropdown" && (
+            <select
+              value={answers[currentQuestionIndex] || ""}
+              onChange={(e) => handleAnswerChange(e.target.value)}
+              className="w-full p-3 border rounded-lg mb-4"
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              {currentQuestion.options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          )}
+          {currentQuestion.inputType === "date" && (
+            <input
+              type="date"
+              value={answers[currentQuestionIndex] || ""}
+              onChange={(e) => handleAnswerChange(e.target.value)}
+              className="w-full p-3 border rounded-lg mb-4"
+            />
+          )}
+        </AnimatePresence>
+
+        <div className="flex justify-between">
+          <button
+            onClick={handleBack}
+            disabled={currentQuestionIndex === 0}
+            className="bg-gray-300 py-2 px-4 rounded disabled:opacity-50"
+          >
+            Back
+          </button>
+          {currentQuestionIndex === questions.length - 1 ? (
+            <button
+              onClick={handleSubmit}
+              className="bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              Submit
+            </button>
+          ) : (
+            <button
+              onClick={handleNext}
+              className="bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              Next
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default FarmerCalculator;
+export default DailyCalculator;
