@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useLocation } from "react-router-dom";
 
 const ingredients = [
   { name: "Chicken", amount: "500g" },
@@ -31,6 +32,9 @@ const waterFootprintDishes = [
 ];
 
 const Result = () => {
+  const location = useLocation();
+  const resultData = location.state.data;
+  console.log(resultData);
   return (
     <div className="flex flex-col w-full min-h-screen bg-gray-50 p-6">
       <motion.div
@@ -49,10 +53,10 @@ const Result = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-4 left-4 text-white">
-            <h1 className="text-3xl font-bold mb-2">Chicken Tikka Masala</h1>
+            <h1 className="text-3xl font-bold mb-2">{resultData.DishName}</h1>
             <div className="flex items-center gap-2">
               <Waves className="w-5 h-5 text-blue-400" />
-              <span>Water Footprint: 1600 liters</span>
+              <span>Water Footprint: {resultData.Totalwaterfootprint}</span>
             </div>
           </div>
         </div>
@@ -73,16 +77,18 @@ const Result = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {ingredients.map((ingredient) => (
-                    <TableRow key={ingredient.name}>
-                      <TableCell className="font-medium">
-                        {ingredient.name}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {ingredient.amount}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {resultData.Ingredientswaterfootprint.map(
+                    (ingredient, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          {ingredient.ingredientName}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {ingredient.ingredientFootprint}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -97,11 +103,11 @@ const Result = () => {
       >
         <h2 className="text-2xl font-bold mb-4">Water Footprint Comparison</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {waterFootprintDishes.map((dish, index) => (
-            <Card key={dish.name} className="w-full">
+          {resultData.Alternativerecommendations.map((altDish, index) => (
+            <Card key={index} className="w-full">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  <span>{dish.name}</span>
+                  <span>{altDish.DishName}</span>
                   <Droplet
                     className={`h-5 w-5 ${
                       index === 0
@@ -117,7 +123,7 @@ const Result = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Water Footprint:</span>
                   <span className="text-lg font-semibold">
-                    {dish.waterFootprint} liters
+                    {altDish.Totalwaterfootprint} liters
                   </span>
                 </div>
                 <div className="mt-4 bg-gray-200 h-2 rounded-full overflow-hidden">
@@ -129,7 +135,9 @@ const Result = () => {
                         ? "bg-blue-400"
                         : "bg-blue-300"
                     }`}
-                    style={{ width: `${(dish.waterFootprint / 1600) * 100}%` }}
+                    style={{
+                      width: `${(altDish.Totalwaterfootprintt / 1600) * 100}%`,
+                    }}
                   ></div>
                 </div>
               </CardContent>

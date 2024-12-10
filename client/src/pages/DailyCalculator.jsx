@@ -32,110 +32,107 @@ const DailyCalculator = () => {
     const calculateIntermediateWaterUsage = () => {
       let total = 0;
 
-      if (answers[0] === 'Once per day') {
+      if (answers[0] === "Once per day") {
         total += 4; // 4 liters per day
-      } else if ((answers[0] === 'Twice per day') ){
+      } else if (answers[0] === "Twice per day") {
         total += 6; // 6 liters per day
-      } else if ((answers[0] === 'After every meal or multiple times per day') ){
+      } else if (answers[0] === "After every meal or multiple times per day") {
         total += 8; // 8 liters per day
       }
 
-    if (answers[1]=== 'Yes') {
-         total -= 1; // Assume 1 liters saved in a day
-    }
-
-      
-        if (answers[2] === '1 bucket') {
-          total += 15; // 15 liters per bath
-        } else if (answers[2] === '2 buckets') {
-          total += 30; // 30 liters per bath
-        } else if (answers[2] === 'More than 2 buckets') {
-          total += 45; // 45 liters per bath
-        }
-
-        if (answers[3] === 'Less than 5 minutes') {
-          total += 50; // 50 liters per shower
-      } else if (answers[3] === '5–10 minutes') {
-          total += 100; // 100 liters per shower
-      } else if (answers[3] === 'More than 10 minutes') {
-          total += 150; // 150 liters per shower
+      if (answers[1] === "Yes") {
+        total -= 1; // Assume 1 liters saved in a day
       }
-  
 
-      if (answers[4]==='Yes') {
-        total -=15
+      if (answers[2] === "1 bucket") {
+        total += 15; // 15 liters per bath
+      } else if (answers[2] === "2 buckets") {
+        total += 30; // 30 liters per bath
+      } else if (answers[2] === "More than 2 buckets") {
+        total += 45; // 45 liters per bath
       }
-      
-      if (answers[5] === 'After every meal') {
+
+      if (answers[3] === "Less than 5 minutes") {
+        total += 50; // 50 liters per shower
+      } else if (answers[3] === "5–10 minutes") {
+        total += 100; // 100 liters per shower
+      } else if (answers[3] === "More than 10 minutes") {
+        total += 150; // 150 liters per shower
+      }
+
+      if (answers[4] === "Yes") {
+        total -= 15;
+      }
+
+      if (answers[5] === "After every meal") {
         total += 30; // 30 liters per day
-    } else if (answers[5] === 'Twice') {
+      } else if (answers[5] === "Twice") {
         total += 20; // 20 liters per day
-    } else if (answers[5] === 'Once') {
+      } else if (answers[5] === "Once") {
         total += 15; // 15 liters per day
-    }
+      }
 
-    if (answers[6]==='By Hand') {
-      total+= 10;
-    }else if(answers[6]==='Dishwasher'){
-      total+= 15;
-    }
-    let laundryWater=0;
-    if (answers[7] === 'Hand Washing') {
-      laundryWater += 30; // 30 liters per wash
-  } else if (answers[7] === 'Semi-Automatic Washing Machine') {
-      laundryWater += 60; // 60 liters per wash
-  } else if (answers[7] === 'Fully Automatic Washing Machine') {
-      laundryWater += 100; // 100 liters per wash
-  }
-  if (answers[8] === '1–2 times') {
-    laundryWater *= 2; // 2 washes per week (total for 7 days)
-} else if (answers[8] === '3–5 times') {
-    laundryWater *= 4; // 4 washes per week
-} else if (answers[8] === 'More than 5 times') {
-    laundryWater *= 6; // 6 washes per week
-}
+      if (answers[6] === "By Hand") {
+        total += 10;
+      } else if (answers[6] === "Dishwasher") {
+        total += 15;
+      }
+      let laundryWater = 0;
+      if (answers[7] === "Hand Washing") {
+        laundryWater += 30; // 30 liters per wash
+      } else if (answers[7] === "Semi-Automatic Washing Machine") {
+        laundryWater += 60; // 60 liters per wash
+      } else if (answers[7] === "Fully Automatic Washing Machine") {
+        laundryWater += 100; // 100 liters per wash
+      }
+      if (answers[8] === "1–2 times") {
+        laundryWater *= 2; // 2 washes per week (total for 7 days)
+      } else if (answers[8] === "3–5 times") {
+        laundryWater *= 4; // 4 washes per week
+      } else if (answers[8] === "More than 5 times") {
+        laundryWater *= 6; // 6 washes per week
+      }
 
-total+=laundryWater;
+      total += laundryWater;
 
-if (answers[9] === 'Daily') {
-  total += 5; // 5 liters per day
-} else if (answers[9] === 'Every Alternate Day') {
-  total += 3; // 3 liters every alternate day (convert to daily)
-} else if (answers[9] === 'Weekly') {
-  total += 2 / 7; // 2 liters per week (convert to daily)
-}
+      if (answers[9] === "Daily") {
+        total += 5; // 5 liters per day
+      } else if (answers[9] === "Every Alternate Day") {
+        total += 3; // 3 liters every alternate day (convert to daily)
+      } else if (answers[9] === "Weekly") {
+        total += 2 / 7; // 2 liters per week (convert to daily)
+      }
 
-if (answers[10] === 'Yes, Daily') {
-  total += 20; // 20 liters per day
-} else if (answers[10]  === 'Yes, Weekly') {
-  total += 70 / 7; // 20 liters per week (convert to daily)
-} else if (answers[10]  === 'Yes, Monthly') {
-  total += 100 / 30; // 4 liters per month (convert to daily)
-}
+      if (answers[10] === "Yes, Daily") {
+        total += 20; // 20 liters per day
+      } else if (answers[10] === "Yes, Weekly") {
+        total += 70 / 7; // 20 liters per week (convert to daily)
+      } else if (answers[10] === "Yes, Monthly") {
+        total += 100 / 30; // 4 liters per month (convert to daily)
+      }
 
-if (answers[11] === 'Yes, Daily') {
-  total += 15; // 20 liters per day
-} else if (answers[11]  === 'Yes, Weekly') {
-  total += 30 / 7; // 20 liters per week (convert to daily)
-} else if (answers[11]  === 'Yes, Monthly') {
-  total += 50 / 30; // 4 liters per month (convert to daily)
-}
-if (answers[12] === 'Yes') {
-  total += 50 / 7; // 50 liters per week (convert to daily)
-} 
+      if (answers[11] === "Yes, Daily") {
+        total += 15; // 20 liters per day
+      } else if (answers[11] === "Yes, Weekly") {
+        total += 30 / 7; // 20 liters per week (convert to daily)
+      } else if (answers[11] === "Yes, Monthly") {
+        total += 50 / 30; // 4 liters per month (convert to daily)
+      }
+      if (answers[12] === "Yes") {
+        total += 50 / 7; // 50 liters per week (convert to daily)
+      }
 
-if (answers[13] === 'Yes') {
-  total += 5; // 5 liters per day for pets
-}
+      if (answers[13] === "Yes") {
+        total += 5; // 5 liters per day for pets
+      }
 
-if (answers[14]) {
-  total = Number(answers[14]) * total; 
-}
+      if (answers[14]) {
+        total = Number(answers[14]) * total;
+      }
 
-if (answers[15] === 'Urban Area') {
-  total *= 1.2; 
-}
-
+      if (answers[15] === "Urban Area") {
+        total *= 1.2;
+      }
 
       setWaterUsage(Math.round(total));
     };
