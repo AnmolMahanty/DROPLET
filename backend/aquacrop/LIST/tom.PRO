@@ -6,16 +6,16 @@
   34720         : First day of cropping period - 22 January 1996  
   34829         : Last day of cropping period - 10 May 1996      
 -- 1. Climate (CLI) file
-   dombivli.cli
+   dombivli.CLI
    C:\sarthak\DROPLET\backend\routes\
    1.1 Temperature (Tnx or TMP) file
-   dombivli.tnx
+   dombivli.Tnx
    C:\sarthak\DROPLET\backend\routes\
    1.2 Reference ET (ETo) file
-   dombivli.eto
+   dombivli.ETo
    C:\sarthak\DROPLET\backend\routes\
    1.3 Rain (PLU) file
-   dombivli.plu
+   dombivli.Plu
    C:\sarthak\DROPLET\backend\routes\
    1.4 Atmospheric CO2 concentration (CO2) file
    MaunaLoa.CO2
@@ -24,8 +24,8 @@
    (None)
    (None)
 -- 3. Crop (CRO) file
-   Tomato.CRO
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   selectedCrop.CRO
+   C:\sarthak\DROPLET\backend\routes\
 -- 4. Irrigation management (IRR) file
    irr1.IRR
    C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\

@@ -24,11 +24,11 @@
    (None)
    (None)
 -- 3. Crop (CRO) file
-   Tomato.CRO
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   selectedCrop.CRO
+   C:\sarthak\DROPLET\backend\routes\
 -- 4. Irrigation management (IRR) file
-   irr1.IRR
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   generatedIrr.IRR
+   C:\sarthak\DROPLET\backend\routes\
 -- 5. Field management (MAN) file
    (None)
    (None)

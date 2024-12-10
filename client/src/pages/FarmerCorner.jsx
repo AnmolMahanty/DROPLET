@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const DailyCalculator = () => {
   const navigate = useNavigate();
@@ -21,12 +21,62 @@ const DailyCalculator = () => {
             {
               question: "Enter the crop name?",
               inputType: "dropdown",
-              options: ["eggplant", "jawara", "Rice"],
+              options: ["Tomato","Broccoli", "Brussel Sprouts", "Cabbage", "Carrots", "Cauliflower", "Celery", "Garlic", "Lettuce", "Spinach", "Radish", "Egg Plant", "Sweet Peppers (bell)", "Sweet Potato", "Chick pea", "Beans, green", "Beans, dry and Pulses", "Cacao", "Kiwi", "Date Palms", "Coffee"],
             },
             {
               question: "Select your location?",
               inputType: "dropdown",
-              options: ["Delhi", "Mumbai", "UP", "MP", "Add Sarthak"],
+              options: [
+                "Delhi",
+                "Mumbai",
+                "Lucknow",
+                "Bhopal",
+                "Chennai",
+                "Hyderabad",
+                "Bangalore",
+                "Ahmedabad",
+                "Kolkata",
+                "Pune",
+                "Jaipur",
+                "Patna",
+                "Raipur",
+                "Nagpur",
+                "Surat",
+                "Coimbatore",
+                "Chandigarh",
+                "Guwahati",
+                "Indore",
+                "Ludhiana",
+                "Amritsar",
+                "Vijayawada",
+                "Varanasi",
+                "Kanpur",
+                "Mysore",
+                "Thiruvananthapuram",
+                "Ranchi",
+                "Jodhpur",
+                "Allahabad",
+                "Madurai",
+                "Vellore",
+                "Dharwad",
+                "Puducherry",
+                "Kozhikode",
+                "Jamshedpur",
+                "Dehradun",
+                "Shimla",
+                "Shillong",
+                "Cuttack",
+                "Dibrugarh",
+                "Agartala",
+                "Panaji",
+                "Imphal",
+                "Aizawl",
+                "Itanagar",
+                "Gangtok",
+                "Silchar",
+                "Udaipur",
+                "Bhubaneswar"
+              ],
             },
             {
               question: "SOWING DATE?",
@@ -47,13 +97,8 @@ const DailyCalculator = () => {
               question: "What is the total area of your farm?(Square Meters)",
               inputType: "number",
             },
-            {
-              question: "What is the primary source of water for irrigation?",
-              inputType: "dropdown",
-              options: ["Canal", "Borewell", "River"],
-            },
-            {
-              question: "If yes, what is the motor's horsepower (HP)?",
+            {//TODO : add handling for no motor usage logic
+              question: "What is the motor's horsepower (HP)?",
               inputType: "number",
             },
             {
@@ -92,11 +137,7 @@ const DailyCalculator = () => {
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
-            {
-              question: "Do you increase or decrease irrigation based on the crop phase?",
-              inputType: "dropdown",
-              options: ["Yes", "No"],
-            },
+            
           ],
         },
       ],

@@ -27,11 +27,55 @@ const irrGen = require('../routes/irrigationGenerator');
 //   "timestamp": "2024-12-09T18:53:35.869Z"
 // }
 const cityLatLong = {
-  "Mumbai": { latitude: 19.0760, longitude: 72.8777 },
   "Delhi": { latitude: 28.7041, longitude: 77.1025 },
-  "UP": { latitude: 26.8467, longitude: 80.9462 },
-  "MP": { latitude: 23.2599, longitude: 77.4126 },
-  "Add Sarthak": { latitude: 10.7877, longitude: 79.1384 }
+  "Mumbai": { latitude: 19.0760, longitude: 72.8777 },
+  "Lucknow": { latitude: 26.8467, longitude: 80.9462 },
+  "Bhopal": { latitude: 23.2599, longitude: 77.4126 },
+  "Chennai": { latitude: 13.0827, longitude: 80.2707 },
+  "Hyderabad": { latitude: 17.3850, longitude: 78.4867 },
+  "Bangalore": { latitude: 12.9716, longitude: 77.5946 },
+  "Ahmedabad": { latitude: 23.0225, longitude: 72.5714 },
+  "Kolkata": { latitude: 22.5726, longitude: 88.3639 },
+  "Pune": { latitude: 18.5204, longitude: 73.8567 },
+  "Jaipur": { latitude: 26.9124, longitude: 75.7873 },
+  "Patna": { latitude: 25.5941, longitude: 85.1376 },
+  "Raipur": { latitude: 21.2514, longitude: 81.6296 },
+  "Nagpur": { latitude: 21.1458, longitude: 79.0882 },
+  "Surat": { latitude: 21.1702, longitude: 72.8311 },
+  "Coimbatore": { latitude: 11.0168, longitude: 76.9558 },
+  "Chandigarh": { latitude: 30.7333, longitude: 76.7794 },
+  "Guwahati": { latitude: 26.1445, longitude: 91.7362 },
+  "Indore": { latitude: 22.7196, longitude: 75.8577 },
+  "Ludhiana": { latitude: 30.9000, longitude: 75.8500 },
+  "Amritsar": { latitude: 31.6340, longitude: 74.8723 },
+  "Vijayawada": { latitude: 16.5062, longitude: 80.6480 },
+  "Varanasi": { latitude: 25.3176, longitude: 82.9739 },
+  "Kanpur": { latitude: 26.4499, longitude: 80.3319 },
+  "Mysore": { latitude: 12.2958, longitude: 76.6394 },
+  "Thiruvananthapuram": { latitude: 8.5241, longitude: 76.9366 },
+  "Ranchi": { latitude: 23.3441, longitude: 85.3096 },
+  "Jodhpur": { latitude: 26.2389, longitude: 73.0243 },
+  "Allahabad": { latitude: 25.4358, longitude: 81.8463 },
+  "Madurai": { latitude: 9.9252, longitude: 78.1198 },
+  "Vellore": { latitude: 12.9165, longitude: 79.1325 },
+  "Dharwad": { latitude: 15.4589, longitude: 75.0078 },
+  "Puducherry": { latitude: 11.9139, longitude: 79.8145 },
+  "Kozhikode": { latitude: 11.2588, longitude: 75.7804 },
+  "Jamshedpur": { latitude: 22.8046, longitude: 86.2029 },
+  "Dehradun": { latitude: 30.3165, longitude: 78.0322 },
+  "Shimla": { latitude: 31.1048, longitude: 77.1734 },
+  "Shillong": { latitude: 25.5788, longitude: 91.8933 },
+  "Cuttack": { latitude: 20.4625, longitude: 85.8821 },
+  "Dibrugarh": { latitude: 27.4728, longitude: 94.9110 },
+  "Agartala": { latitude: 23.8315, longitude: 91.2868 },
+  "Panaji": { latitude: 15.4909, longitude: 73.8278 },
+  "Imphal": { latitude: 24.8170, longitude: 93.9368 },
+  "Aizawl": { latitude: 23.7271, longitude: 92.7176 },
+  "Itanagar": { latitude: 27.0844, longitude: 93.6053 },
+  "Gangtok": { latitude: 27.3389, longitude: 88.6065 },
+  "Silchar": { latitude: 24.8333, longitude: 92.7789 },
+  "Udaipur": { latitude: 24.5854, longitude: 73.7125 },
+  "Bhubaneswar": { latitude: 20.2961, longitude: 85.8245 }
 };
 router.post('/getData', async (req, res) => {
   try {
@@ -39,9 +83,9 @@ router.post('/getData', async (req, res) => {
 
     const jsonData = req.body;
     const location = jsonData.answers[1];
-    const crop = jsonData.answers[0];
-    const {latitude, longitude} = cityLatLong[location];
-    const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=2023-01-01&end_date=2024-12-01&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => {console.log(err);});
+    const cropName = jsonData.answers[0];
+    const { latitude, longitude } = cityLatLong[location];
+    const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=2023-01-01&end_date=2024-12-01&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log(err); });
     console.log(climateData.status);
     const data = climateData.data;
 
@@ -58,55 +102,66 @@ router.post('/getData', async (req, res) => {
     const etoFilePath = path.join(__dirname, 'dombivli.eto');
 
     // Write CLI file
-    const cliContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API 3.0   : AquaCrop Version (January 2009)
-dombivli.Tnx
-dombivli.ETO
-dombivli.PLU
-MaunaLoa.CO2\n`;
+    const cliContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API 3.0   : AquaCrop Version (January 2009)\r
+dombivli.Tnx\r
+dombivli.ETO\r
+dombivli.PLU\r
+MaunaLoa.CO2\r`;
     fs.writeFile(cliFilePath, cliContent);
 
     // Write PLU file
-    const pluContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API
-     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
-     1  : First month of record
-  2023  : First year of record (1901 if not linked to a specific year)
-
-  Total Rain (mm)
-=======================
-${rainSum.join('\n')}\n`;
+    const pluContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
+     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
+    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
+     1  : First month of record\r
+  2023  : First year of record (1901 if not linked to a specific year)\r
+\r
+  Total Rain (mm)\r
+=======================\r
+${rainSum.join('\r\n')}\r\n`;
     fs.writeFile(pluFilePath, pluContent);
 
     // Write TNX file
-    const tnxContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API
-     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
-     1  : First month of record
-  2023  : First year of record (1901 if not linked to a specific year)
-
-  Tmin (C)   TMax (C)      
-========================
-${temperaturesMin.map((min, index) => `${min}\t${temperaturesMax[index]}`).join('\n')}\n`;
+    const tnxContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
+     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
+    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
+     1  : First month of record\r
+  2023  : First year of record (1901 if not linked to a specific year)\r
+\r
+  Tmin (C)   TMax (C)      \r
+========================\r
+${temperaturesMin.map((min, index) => `${min}\t${temperaturesMax[index]}`).join('\r\n')}\r\n`;
     fs.writeFile(tnxFilePath, tnxContent);
 
     // Write ETO file
-    const etoContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API
-     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
-     1  : First month of record
-  2023  : First year of record (1901 if not linked to a specific year)
-
-  Average ETo (mm/day)
-=======================
-${et0.join('\n')}\n`;
+    const etoContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
+     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
+    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
+     1  : First month of record\r
+  2023  : First year of record (1901 if not linked to a specific year)\r
+\r
+  Average ETo (mm/day)\r
+=======================\r
+${et0.join('\r\n')}\r\n`;
     fs.writeFile(etoFilePath, etoContent);
-    irrGen.generateIrrigationSchedule(jsonData.answers);
+    // irrGen.generateIrrigationSchedule(jsonData.answers);
+
+// console.log(cropName.trim().replace(" ", "_"));
+    // Define the source and destination paths
+    const sourcePath = path.join(__dirname, '..', 'aquacrop', 'Crops', `${cropName.trim().replace(" ", "_")}.cro`);
+    const destinationPath = path.join(__dirname, `selectedCrop.cro`);
+
+    // Copy the .cro file from the crop folder to the current folder
+    await fs.copyFile(sourcePath, destinationPath);
+    console.log(`Copied ${cropName}.cro to the current folder`);
+
+
     console.log('Files written successfully');
-    try{
-    var executeResponse=await axios.post('http://localhost:5000/api/execute');
-    res.status(executeResponse.status).send(executeResponse.data);
+    try {
+      var executeResponse = await axios.post('http://localhost:5000/api/execute');
+      res.status(executeResponse.status).send(executeResponse.data);
     }
-    catch(err){
+    catch (err) {
       console.log(err);
     }
   } catch (error) {
@@ -120,10 +175,10 @@ ${et0.join('\n')}\n`;
 //and then return the output of the model to the frontend
 
 
-router.post('/execute',async (req, res) => {
+router.post('/execute', async (req, res) => {
   // axios.post('http://localhost:5000/api/getData').then{
 
-  
+
   const exePath = path.join(__dirname, '..', 'aquacrop', 'aquacrop.exe');
   const workingDirectory = path.join(__dirname, '..', 'aquacrop');
   const outputFilePath = path.join(__dirname, '..', 'aquacrop', 'OUTP', 'tomPROday.OUT');
@@ -167,13 +222,13 @@ router.post('/execute',async (req, res) => {
       // Get the last value from the WPet column
       const lastWpetValue = wpetValues[wpetValues.length - 1];
 
-      res.json({ message: 'Executable ran successfully', output:lastWpetValue });
+      res.json({ message: 'Executable ran successfully', output: lastWpetValue });
     } catch (err) {
       console.error(`Error reading output file: ${err}`);
       return res.status(500).json({ error: 'Failed to read output file' });
     }
   });
-// }
+  // }
 });
 
 module.exports = router;

@@ -1,10 +1,14 @@
 import { writeFileSync } from "fs";
-import { readFile, utils } from "xlsx";
+import { read,  utils } from "xlsx";
 import { join } from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 // Load crop parameter data from Excel
-const excelFilePath = join(__dirname, "CropParameters.xlsx"); // Replace with the actual filename
-const workbook = readFile(excelFilePath);
+const filePath = join(__dirname, '..', 'storedData', 'CropParameters.xlsx');
+const workbook = read(filePath, { type: "file" });
 const sheetName = workbook.SheetNames[0];
 const cropData = utils.sheet_to_json(workbook.Sheets[sheetName]);
 
@@ -45,7 +49,7 @@ function parseFrequency(frequency) {
  * @param {Object} userInputs - Inputs from the user.
  * @returns {Object} Result with irrigation schedule and details.
  */
-export function generateIrrigationSchedule(userInputs) {
+export function generateIrrigationSchedule(jsonData) {
       const cropName = jsonData["0"];
   const location = jsonData["1"];
   const sowingDate = jsonData["2"];
@@ -76,7 +80,7 @@ export function generateIrrigationSchedule(userInputs) {
 
     // Calculate flow rate
     const pipeArea = calculatePipeArea(pipeDiameter);
-    const flowRate = calculateFlowRate(pipeArea, waterVelocity);
+    const flowRate = calculateFlowRate(pipeArea, 2);//replace with actual velocity
 
     // Total weekly water volume and depth
     const totalWaterDepthPerWeek = ((flowRate * irrigationHoursPerSession * irrigationSessionsPerWeek) / farmArea) * 1000;
@@ -103,21 +107,23 @@ export function generateIrrigationSchedule(userInputs) {
         currentDay += maturityFrequency;
     }
 
-    // Create .irr file content
-    let irrFileContent = `7.2   : AquaCrop Version (August 2024)\n`;
-    irrFileContent += `4     : Surface irrigation: Furrow\n`;
-    irrFileContent += `90     : Percentage of soil surface wetted by irrigation\n`;
-    irrFileContent += `1     : Irrigation schedule\n`;
-    irrFileContent += `   -9 : Day 1 is first day of growing period\n`;
-    irrFileContent += `   Day    Depth (mm)   ECw (dS/m)\n`;
-    irrFileContent += `====================================\n`;
+    // Create .irr file content//
+    //first line of file discription
+    let irrFileContent = `7.2   : AquaCrop Version (August 2024)\r\n`;
+    irrFileContent += `4     : Surface irrigation: Furrow\r\n`;
+    irrFileContent += `90     : Percentage of soil surface wetted by irrigation\r\n`;
+    irrFileContent += `1     : Irrigation schedule\r\n`;
+//empty line no 6
+
+    irrFileContent += `   Day    Depth (mm)   ECw (dS/m)\r\n`;
+    irrFileContent += `====================================\r\n`;
 
     irrigationSchedule.forEach(entry => {
-        irrFileContent += `    ${entry.day.toString().padStart(2)}        ${entry.depth.toString().padStart(6)}          ${entry.ecw.toFixed(1)}\n`;
+        irrFileContent += `    ${entry.day.toString().padStart(2)}        ${entry.depth.toString().padStart(6)}          ${entry.ecw.toFixed(1)}\r\n`;
     });
 
     // Save to .irr file
-    const outputPath = join(__dirname, `${cropName}_irrigation.irr`);
+    const outputPath = join(__dirname, `generatedIrr.irr`);
     writeFileSync(outputPath, irrFileContent);
 
     return {

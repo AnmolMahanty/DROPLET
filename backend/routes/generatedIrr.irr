@@ -1,0 +1,22 @@
+7.2   : AquaCrop Version (August 2024)
+4     : Surface irrigation: Furrow
+90     : Percentage of soil surface wetted by irrigation
+1     : Irrigation schedule
+   -9 : Day 1 is first day of growing period
+   Day    Depth (mm)   ECw (dS/m)
+====================================
+     1        403919.06          1.5
+     8        403919.06          1.5
+    15        403919.06          1.5
+    22        403919.06          1.5
+    29        403919.06          1.5
+    36        403919.06          1.5
+    43        403919.06          1.5
+    50        403919.06          1.5
+    57        403919.06          1.5
+    64        403919.06          1.5
+    71        403919.06          1.5
+    78        403919.06          1.5
+    85        403919.06          1.5
+    92        403919.06          1.5
+    99        403919.06          1.5
