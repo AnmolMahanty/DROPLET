@@ -195,7 +195,7 @@
 
 // export default Home;
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import {
   Droplet,
@@ -203,9 +203,9 @@ import {
   Camera,
   Tractor,
   ChevronRight,
-  Info,
 } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
+import Chatbot from "@/components/Chatbot";
 
 const FeatureCard = ({ icon, title, description }) => (
   <motion.div
@@ -269,7 +269,7 @@ const Home = () => {
   }, [waterUsage, waterLevelAnimation]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <Navbar />
       <div className="pt-20">
         {/* Hero Section */}
@@ -429,6 +429,9 @@ const Home = () => {
             </div>
           </div>
         </footer>
+      </div>
+      <div  className="fixed bottom-10 right-10 z-50">
+        <Chatbot />
       </div>
     </div>
   );
