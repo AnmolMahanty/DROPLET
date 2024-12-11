@@ -22,6 +22,11 @@ const Dashboard = () => {
     navigate("farmersCorner");
   };
 
+  const handleBlogClick = () => {
+    setSelected("blog");
+    navigate("blog");
+  };
+
   return (
     <>
       <div className="relative w-full h-16 flex justify-between items-center px-12 border border-black/5 bg-blue-950">
@@ -64,6 +69,14 @@ const Dashboard = () => {
             onClick={handleFarmerCornerClick}
           >
             Farmer's Corner
+          </div>
+          <div
+            className={`cursor-pointer ${
+              selected === "blog" ? "text-white" : ""
+            }`}
+            onClick={handleBlogClick}
+          >
+            Blogs
           </div>
         </div>
         <div className="cursor-pointer">
