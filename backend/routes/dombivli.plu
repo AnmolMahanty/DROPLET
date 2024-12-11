@@ -1,9 +1,8 @@
-dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API
-7.2   : AquaCrop Version (January 2009)
+Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
      1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
     01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
      1  : First month of record
-  2023  : First year of record (1901 if not linked to a specific year)
+  1996  : First year of record (1901 if not linked to a specific year)
 
   Total Rain (mm)
 =======================

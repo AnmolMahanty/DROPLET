@@ -5,6 +5,7 @@ const { execFile } = require('child_process');
 const path = require('path');
 const fs = require('fs').promises;
 const irrGen = require('../routes/irrigationGenerator');
+const { createProjectFile } = require('./createPro');
 
 
 // {
@@ -85,7 +86,7 @@ router.post('/getData', async (req, res) => {
     const location = jsonData.answers[1];
     const cropName = jsonData.answers[0];
     const { latitude, longitude } = cityLatLong[location];
-    const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=2023-01-01&end_date=2024-12-01&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log(err); });
+    const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=2023-01-01&end_date=2024-12-01&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log("myerror1: "+err.message); });
     //const cityLatLong = {
     // "Mumbai": { latitude: 19.0760, longitude: 72.8777 },
     // "Delhi": { latitude: 28.7041, longitude: 77.1025 },
@@ -113,57 +114,79 @@ router.post('/getData', async (req, res) => {
 7.2   : AquaCrop Version (January 2009)\r
 dombivli.TMP\r
 dombivli.ETo\r
-dombivli.PLU\r
+dombivli.Plu\r
 MaunaLoa.CO2\r`;
     fs.writeFile(cliFilePath, cliContent);
 
     // Write PLU file
-    const pluContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
-7.2   : AquaCrop Version (January 2009)\r
-     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
-     1  : First month of record\r
-  2023  : First year of record (1901 if not linked to a specific year)\r
-\r
-  Total Rain (mm)\r
-=======================\r
+    const pluContent = `Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
+     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
+    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
+     1  : First month of record
+  1996  : First year of record (1901 if not linked to a specific year)
+
+  Total Rain (mm)
+=======================
 ${rainSum.join('\r\n')}\r\n`;
     fs.writeFile(pluFilePath, pluContent);
 
     // Write TMP file
-    const tmpContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
-     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
-    1  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
-     1  : First month of record\r
-  2023  : First year of record (1901 if not linked to a specific year)\r
-\r
-  Tmin(°C)   TMax(°C)      \r
-========================\r
+    const tmpContent = `Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
+     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
+    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
+     1  : First month of record
+  1996  : First year of record (1901 if not linked to a specific year)
+
+  Tmin (C)   TMax (C)      
+========================
 ${temperaturesMin.map((min, index) => `\t${min}\t${temperaturesMax[index]}`).join('\r\n')}\r\n`;
     fs.writeFile(tmpFilePath, tmpContent);
 
     // Write ETO file
-    const etoContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
-    7.2   : AquaCrop Version (January 2009)\r
-     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
-     1  : First month of record\r
-  2023  : First year of record (1901 if not linked to a specific year)\r
-\r
-  Average ETo (mm/day)\r
-=======================\r
-${et0.join('\r\n')}\r\n`;
-    fs.writeFile(etoFilePath, etoContent);
-    irrGen.generateIrrigationSchedule(jsonData.answers);
+    const etoContent = `Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
+     1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
+    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
+     1  : First month of record
+  1996  : First year of record (1901 if not linked to a specific year)
 
+  Average ETo (mm/day)
+=======================
+${et0.join('\r\n')}\r\n`;
+
+    fs.writeFile(etoFilePath, etoContent);
+    irrGen.generateIrrigationSchedule(jsonData.answers)
+    //.catch(err => { console.log("myerror2: "+err.message); });
+    
     // console.log(cropName.trim().replace(" ", "_"));
     // Define the source and destination paths
-    const sourcePath = path.join(__dirname, '..', 'aquacrop', 'Crops', `${cropName.trim().replace(" ", "_")}.cro`);
+    try
+    {const sourcePath = path.join(__dirname, '..', 'aquacrop', 'Crops', `${cropName.trim().replace(" ", "_")}.cro`);
     const destinationPath = path.join(__dirname, `selectedCrop.cro`);
 
     // Copy the .cro file from the crop folder to the current folder
-    await fs.copyFile(sourcePath, destinationPath);
+    await fs.copyFile(sourcePath, destinationPath);}
+    catch(err)
+    {
+      console.log("myerror3: "+err.message);
+    }
     console.log(`Copied ${cropName}.cro to the current folder`);
+    const proData = {
+      version: '7.2',
+      yearNumber: 1,
+      startDate: { year: 2023, month: 1, day: 22 },
+      endDate: { year: 2023, month: 5, day: 10 },
+      cropStartDate: { year: 2023, month: 1, day: 22 },
+      cropEndDate: { year: 2023, month: 5, day: 10 },
+      climateFile: 'dombivli.CLI',
+      temperatureFile: 'dombivli.TMP',
+      referenceETFile: 'dombivli.ETo',
+      rainFile: 'dombivli.Plu',
+      co2File: 'MaunaLoa.CO2',
+      cropFile: 'Tomato.CRO',
+      irrigationFile: 'irr1.IRR',
+      soilFile: 'SandyLoam.SOL',
+    };
+    // createProjectFile(proData);
 
 
     console.log('Files written successfully');
@@ -188,7 +211,7 @@ ${et0.join('\r\n')}\r\n`;
 router.post('/execute', async (req, res) => {
   // axios.post('http://localhost:5000/api/getData').then{
 
-
+  console.log('Executing model');
   const exePath = path.join(__dirname, '..', 'aquacrop', 'aquacrop.exe');
   const workingDirectory = path.join(__dirname, '..', 'aquacrop');
   const outputFilePath = path.join(__dirname, '..', 'aquacrop', 'OUTP', 'tomPROday.OUT');

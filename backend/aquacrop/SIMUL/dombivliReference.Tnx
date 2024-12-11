@@ -1,4 +1,4 @@
-Reference : dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API
+Reference : Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
      3  : Monthly records (1=daily, 2=10-daily and 3=monthly data)
      1  : First day of record (1, 11 or 21 for 10-day or 1 for months)
      1  : First month of record
@@ -6,15 +6,15 @@ Reference : dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API
 
   Tmin (C)   TMax (C) 
   =======================
-     18.71     29.70
-     20.02     32.66
-     21.98     32.87
-     24.84     34.21
-     27.17     33.79
-     26.83     31.24
-     25.52     28.18
-     25.43     28.80
-     24.88     28.81
-     24.18     31.92
-     22.62     33.49
-     10.57     16.20
+     18.70     29.64
+     20.05     32.73
+     22.01     32.82
+     24.88     34.24
+     27.21     33.82
+     26.80     31.15
+     25.53     28.19
+     25.41     28.83
+     24.92     28.81
+     24.10     31.97
+     22.61     33.42
+     10.55     16.23

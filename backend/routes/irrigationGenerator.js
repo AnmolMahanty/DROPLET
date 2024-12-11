@@ -1,8 +1,9 @@
-import { writeFileSync } from "fs";
+import { writeFile, writeFileSync } from "fs";
 import { read, utils } from "xlsx";
 import { join } from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,7 +50,8 @@ function parseFrequency(frequency) {
  * @param {Object} userInputs - Inputs from the user.
  * @returns {Object} Result with irrigation schedule and details.
  */
-export function generateIrrigationSchedule(jsonData) {
+export async function generateIrrigationSchedule(jsonData) {
+    console.log(jsonData);
     const cropName = jsonData["0"];
     const location = jsonData["1"];
     const sowingDate = jsonData["2"];
@@ -101,7 +103,7 @@ export function generateIrrigationSchedule(jsonData) {
         currentDay += maturityFrequency;
     }
 
-    let irrFileContent = `Irrigation schedule for ${ cropName } farm(${ new Date().toLocaleDateString() }) \n`;
+    let irrFileContent = `Irrigation schedule for ${cropName} farm(${new Date().toLocaleDateString()}) \n`;
     irrFileContent += `7.2   : AquaCrop Version(August 2024) \n`;
     irrFileContent += `4     : Surface irrigation: Furrow\n`;
     irrFileContent += `90     : Percentage of soil surface wetted by irrigation\n`;
@@ -116,15 +118,18 @@ export function generateIrrigationSchedule(jsonData) {
 
     // Save to .irr file
     const outputPath = join(__dirname, `generatedIrr.irr`);
+
     writeFileSync(outputPath, irrFileContent);
-    try {
-        const result = generateIrrigationSchedule(jsonData);
-        console.log(result.message);
-        console.log("File Path:", result.filePath);
-        console.log("Irrigation Details:", result.irrigationDetails);
-    } catch (error) {
-        console.error("Error:", error.message);
-    }
+
+    // try {
+    //     const result = generateIrrigationSchedule(jsonData);
+    //     console.log("sarthak1");
+    //     console.log(result.message);
+    //     console.log("File Path:", result.filePath);
+    //     console.log("Irrigation Details:", result.irrigationDetails);
+    // } catch (error) {
+    //     console.error("Error:", error.message);
+    // }
     return {
         message: "Irrigation schedule generated successfully.",
         filePath: outputPath,
