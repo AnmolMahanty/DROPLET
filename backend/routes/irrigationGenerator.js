@@ -57,7 +57,7 @@ export function generateIrrigationSchedule(jsonData) {
     const farmArea = parseFloat(jsonData["4"]); // Assuming farmArea is a number
 
     const motorHorsepower = parseFloat(jsonData["5"]); // Assuming motorHorsepower is a number
-    const pipeDiameter = parseFloat(jsonData["6"]); // Assuming pipeDiameter is a number
+    const pipeDiameterInches = parseFloat(jsonData["6"]); // Assuming pipeDiameter is a number
 
     const irrigationHoursPerSession = parseFloat(jsonData["7"]); // Assuming irrigationHoursPerSession is a number
     const irrigationSessionsPerWeek = parseFloat(jsonData["8"]); // Assuming irrigationSessionsPerWeek is a number
@@ -73,6 +73,9 @@ export function generateIrrigationSchedule(jsonData) {
     const initialFrequency = parseFrequency(frequencies.initial);
     const growthFrequency = parseFrequency(frequencies.growth);
     const maturityFrequency = parseFrequency(frequencies.maturity);
+
+    // Convert pipe diameter from inches to meters
+    const pipeDiameter = pipeDiameterInches * 0.0254;
 
     const pipeArea = calculatePipeArea(pipeDiameter);
     const waterVelocity = calculateWaterVelocity(motorHorsepower, pipeDiameter);
@@ -114,7 +117,14 @@ export function generateIrrigationSchedule(jsonData) {
     // Save to .irr file
     const outputPath = join(__dirname, `generatedIrr.irr`);
     writeFileSync(outputPath, irrFileContent);
-
+    try {
+        const result = generateIrrigationSchedule(jsonData);
+        console.log(result.message);
+        console.log("File Path:", result.filePath);
+        console.log("Irrigation Details:", result.irrigationDetails);
+    } catch (error) {
+        console.error("Error:", error.message);
+    }
     return {
         message: "Irrigation schedule generated successfully.",
         filePath: outputPath,
