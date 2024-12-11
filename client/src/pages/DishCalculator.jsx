@@ -20,10 +20,18 @@ import {
   TrendingUp,
   Info,
 } from "lucide-react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const DishCalculator = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
+  const [name, setName] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const products = [
     { product: "Sandwich", waterFootprint: "150 liters", date: "2024-11-25" },
     { product: "Paneer", waterFootprint: "250 liters", date: "2024-11-26" },
@@ -67,8 +75,53 @@ const DishCalculator = () => {
     },
   ];
 
-  const handleCalculateClick = () => {
-    navigate("/dashboard/result"); // Navigate to the Result page
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+    console.log(name);
+  };
+
+  const handleCalculateClick = async () => {
+    if (!name) {
+      alert("Please enter a product name");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const prompt = `Analyze the given name or Image of a food product or dish and return a structured JSON output in the following format:
+                      name : ${name}
+                      DishName: Identify the name of the dish or product.
+                      Ingredientswaterfootprint: If the dish or product contains multiple ingredients, provide the approximate water footprint values of each ingredient like ingredientName and ingredientFootprint used in the dish for India. The water footprint values should be formatted as X-Y L/kg or X L/kg. If the dish or product contains only one ingredient, omit this section.
+                      Totalwaterfootprint: Calculate and return the total water footprint for the dish. The value should be formatted as X-Y L or X L.
+                      Alternativerecommendations: Suggest three alternative dishes or products with a lower water footprint than the given dish. For each recommendation, include:
+                      DishName.
+                      Total water footprint in the format X-Y L or X L.
+  
+                      Rules:
+                      Avoid adding notes or explanations in the JSON output.
+                      Use approximate water footprint data specific to India.
+                      The values must be formatted in a standard, consistent format.
+                      For single-ingredient dishes or products, do not include a breakdown of ingredients water footprint.`;
+
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      const jsonString = response.text().match(/\{[\s\S]*\}/)[0];
+      const data = JSON.parse(jsonString);
+      console.log(data);
+
+      // Navigate to the quiz page with the generated data
+      navigate("/dashboard/result", {
+        state: {
+          name,
+          data,
+        },
+      });
+    } catch (error) {
+      console.error("Error generating water footprint:", error);
+      alert("Failed to generate water footprint. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className=" container flex flex-col max-w-[1280px] justify-center items-center mx-auto p-6 space-y-6 min-h-[calc(100vh-64px)]">
@@ -128,7 +181,11 @@ const DishCalculator = () => {
 
             <div className="space-y-2">
               <Label htmlFor="product-name">Product Name</Label>
-              <Input id="product-name" placeholder="Type name of the product" />
+              <Input
+                onChange={handleNameChange}
+                id="product-name"
+                placeholder="Type name of the product"
+              />
             </div>
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -188,8 +245,9 @@ const DishCalculator = () => {
             <Button
               onClick={handleCalculateClick}
               className="w-full bg-blue-950"
+              disabled={loading}
             >
-              Calculate Water Footprint
+              {loading ? "Calculating..." : "Calculate Water Footprint"}
             </Button>
           </CardContent>
         </Card>
