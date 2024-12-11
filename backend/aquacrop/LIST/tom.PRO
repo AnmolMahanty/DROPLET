@@ -1,22 +1,22 @@
 
       7.2       : AquaCrop Version (August 2024)
       1         : Year number of cultivation (Seeding/planting year)
-  34720         : First day of simulation period - 22 January 1996  
-  34829         : Last day of simulation period - 10 May 1996      
-  34720         : First day of cropping period - 22 January 1996  
-  34829         : Last day of cropping period - 10 May 1996      
+  34720         : First day of simulation period - 22 January 2024  
+  34829         : Last day of simulation period - 10 May 2024      
+  34720         : First day of cropping period - 22 January 2024  
+  34829         : Last day of cropping period - 10 May 2024      
 -- 1. Climate (CLI) file
-   dombivli.CLI
-   C:\sarthak\DROPLET\backend\routes\
+   Patancheru.CLI
+   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
    1.1 Temperature (Tnx or TMP) file
-   dombivli.Tnx
-   C:\sarthak\DROPLET\backend\routes\
+   Patancheru.Tnx
+   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
    1.2 Reference ET (ETo) file
-   dombivli.ETo
-   C:\sarthak\DROPLET\backend\routes\
+   Patancheru.ETO
+   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
    1.3 Rain (PLU) file
-   dombivli.Plu
-   C:\sarthak\DROPLET\backend\routes\
+   Patancheru.PLU
+   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
    1.4 Atmospheric CO2 concentration (CO2) file
    MaunaLoa.CO2
    C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\SIMUL\

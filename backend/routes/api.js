@@ -86,6 +86,13 @@ router.post('/getData', async (req, res) => {
     const cropName = jsonData.answers[0];
     const { latitude, longitude } = cityLatLong[location];
     const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=2023-01-01&end_date=2024-12-01&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log(err); });
+    //const cityLatLong = {
+    // "Mumbai": { latitude: 19.0760, longitude: 72.8777 },
+    // "Delhi": { latitude: 28.7041, longitude: 77.1025 },
+    // "UP": { latitude: 26.8467, longitude: 80.9462 },
+    // "MP": { latitude: 23.2599, longitude: 77.4126 },
+    // "Add Sarthak": { latitude: 10.7877, longitude: 79.1384 }
+    // const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=2023-01-01&end_date=2024-12-01&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log(err); });
     console.log(climateData.status);
     const data = climateData.data;
 
@@ -96,21 +103,23 @@ router.post('/getData', async (req, res) => {
     const et0 = data.daily.et0_fao_evapotranspiration;
 
     // Define file paths
-    const cliFilePath = path.join(__dirname, 'dombivli.cli');
-    const pluFilePath = path.join(__dirname, 'dombivli.plu');
-    const tnxFilePath = path.join(__dirname, 'dombivli.tnx');
-    const etoFilePath = path.join(__dirname, 'dombivli.eto');
+    const cliFilePath = path.join(__dirname, 'dombivli.CLI');
+    const pluFilePath = path.join(__dirname, 'dombivli.Plu');
+    const tmpFilePath = path.join(__dirname, 'dombivli.TMP');
+    const etoFilePath = path.join(__dirname, 'dombivli.ETo');
 
     // Write CLI file
-    const cliContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API 3.0   : AquaCrop Version (January 2009)\r
-dombivli.Tnx\r
-dombivli.ETO\r
+    const cliContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API \r
+7.2   : AquaCrop Version (January 2009)\r
+dombivli.TMP\r
+dombivli.ETo\r
 dombivli.PLU\r
 MaunaLoa.CO2\r`;
     fs.writeFile(cliFilePath, cliContent);
 
     // Write PLU file
     const pluContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
+7.2   : AquaCrop Version (January 2009)\r
      1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
     01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
      1  : First month of record\r
@@ -121,20 +130,21 @@ MaunaLoa.CO2\r`;
 ${rainSum.join('\r\n')}\r\n`;
     fs.writeFile(pluFilePath, pluContent);
 
-    // Write TNX file
-    const tnxContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
+    // Write TMP file
+    const tmpContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
      1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
+    1  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
      1  : First month of record\r
   2023  : First year of record (1901 if not linked to a specific year)\r
 \r
-  Tmin (C)   TMax (C)      \r
+  Tmin(°C)   TMax(°C)      \r
 ========================\r
-${temperaturesMin.map((min, index) => `${min}\t${temperaturesMax[index]}`).join('\r\n')}\r\n`;
-    fs.writeFile(tnxFilePath, tnxContent);
+${temperaturesMin.map((min, index) => `\t${min}\t${temperaturesMax[index]}`).join('\r\n')}\r\n`;
+    fs.writeFile(tmpFilePath, tmpContent);
 
     // Write ETO file
     const etoContent = `dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API\r
+    7.2   : AquaCrop Version (January 2009)\r
      1  : Daily records (1=daily, 2=10-daily and 3=monthly data)\r
     01  : First day of record (1, 11 or 21 for 10-day or 1 for months)\r
      1  : First month of record\r
@@ -144,9 +154,9 @@ ${temperaturesMin.map((min, index) => `${min}\t${temperaturesMax[index]}`).join(
 =======================\r
 ${et0.join('\r\n')}\r\n`;
     fs.writeFile(etoFilePath, etoContent);
-    // irrGen.generateIrrigationSchedule(jsonData.answers);
+    irrGen.generateIrrigationSchedule(jsonData.answers);
 
-// console.log(cropName.trim().replace(" ", "_"));
+    // console.log(cropName.trim().replace(" ", "_"));
     // Define the source and destination paths
     const sourcePath = path.join(__dirname, '..', 'aquacrop', 'Crops', `${cropName.trim().replace(" ", "_")}.cro`);
     const destinationPath = path.join(__dirname, `selectedCrop.cro`);

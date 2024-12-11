@@ -34,7 +34,7 @@ const FarmerResult = () => {
     datasets: [
       {
         label: "Canopy Development (Ideal)",
-        data: data.ideal,
+        data: [20, 60, 60, 80],
         borderColor: "#4caf50",
         backgroundColor: "rgba(76, 175, 80, 0.2)",
         tension: 0.4,
@@ -61,7 +61,6 @@ const FarmerResult = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-6 bg-gray-100 min-h-screen">
-      <p>hello world</p>
       {/* Ideal Crop Values Section */}
       <div className="flex-1 bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-semibold mb-4">Ideal Crop Values</h2>
