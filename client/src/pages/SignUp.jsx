@@ -1,18 +1,50 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import video from "../assets/signin-video.mp4";
+import axios from 'axios';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { initializeApp } from "firebase/app";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBVmg97HDNoKD2VHDqBQ0BYFj1QlxTiHb8",
+  authDomain: "droplet-10b44.firebaseapp.com",
+  projectId: "droplet-10b44",
+  storageBucket: "droplet-10b44.appspot.com",
+  messagingSenderId: "600481809512",
+  appId: "1:600481809512:web:24e0a88bc22be02dc567dd",
+  measurementId: "G-Q1E2DFHD18"
+};
 
 const SignUp = () => {
   const navigate = useNavigate();
+ 
 
-  const handleGoogleSignUp = () => {
-    // Handle Google sign-in logic here
-    console.log("Google sign-in attempted");
-  };
+  const handleGoogleSignUp = async () => {
+    try {
+      let app;
 
-  const handlePhoneSignUp = () => {
-    // Handle phone sign-in logic here
-    console.log("Phone sign-in attempted");
+      app = initializeApp(firebaseConfig);
+
+
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+
+
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+
+      const response = await axios.post('http://localhost:5000/auth/signin', { idToken });
+      const { customToken } = response.data;
+
+      console.log('Custom Token:', customToken);
+      if (response.status === 200) {
+        navigate("/dashboard/dishCalculator");
+      }
+      // Use the custom token for authentication
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+    }
   };
 
   const handleSignInClick = () => {
@@ -40,7 +72,7 @@ const SignUp = () => {
             </div>
             <div className="mt-6 space-y-6">
               <div className="space-y-4">
-                <button className="w-full flex items-center justify-center space-x-3 py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                <button onClick={handleGoogleSignUp} className="w-full flex items-center justify-center space-x-3 py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                   <img
                     src="src/assets/google.svg"
                     alt="google-logo"
@@ -49,21 +81,7 @@ const SignUp = () => {
                   />
                   <span>Sign up with Google</span>
                 </button>
-                <div className="flex items-center space-x-4">
-                  <hr className="flex-grow border-gray-300" />
-                  <span className="text-xs text-gray-500 font-medium">OR</span>
-                  <hr className="flex-grow border-gray-300" />
-                </div>
 
-                <button className="w-full flex items-center justify-center space-x-3 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                  <img
-                    src="src/assets/phone.svg"
-                    alt="phone-logo"
-                    width={20}
-                    height={20}
-                  />
-                  <span>Sign up with Phone</span>
-                </button>
               </div>
             </div>
             <div className="mt-6 text-center">

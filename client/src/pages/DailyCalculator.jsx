@@ -9,6 +9,12 @@ const DailyCalculator = () => {
   const [calculationResult, setCalculationResult] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [waterUsage, setWaterUsage] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [laundry, setLaundry] = useState(0);
+  const [drinking, setDrinking] = useState(0);
+  const [bathing, setBathing] = useState(0);
+  const [cleaning, setCleaning] = useState(0);
+  
 
   // Fetch questionnaire on component mount
   useEffect(() => {
@@ -30,7 +36,6 @@ const DailyCalculator = () => {
   // Calculate water usage dynamically as questions are answered
   useEffect(() => {
     const calculateIntermediateWaterUsage = () => {
-      let total = 0;
 
       if (answers[0] === 'Once per day') {
         total += 4; // 4 liters per day
