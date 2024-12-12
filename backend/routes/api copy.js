@@ -85,22 +85,8 @@ router.post('/getData', async (req, res) => {
     const jsonData = req.body;
     const location = jsonData.answers[1];
     const cropName = jsonData.answers[0];
-    const startDate = jsonData.answers[2];
-    const endDateCal = Date.parse(startDate) + 1000 * 60 * 60 * 24 * 730;
-    let endDate = new Date(endDateCal).toISOString().split('T')[0];
-    // Ensure endDate does not exceed the maximum allowed date
-    const today = new Date();
-    const maxAllowedDateCal = today.getTime()-1000*60*60*24;
-    const maxAllowedDate = new Date(maxAllowedDateCal).toISOString().split('T')[0];
-
-    // Ensure endDate does not exceed the maximum allowed date
-    if (endDate > maxAllowedDate) {
-      endDate = maxAllowedDate;
-    }
-
     const { latitude, longitude } = cityLatLong[location];
-    console.log(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`)
-    const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log("myerror1: " + err.message); });
+    const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=2023-01-01&end_date=2024-12-01&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log("myerror1: " + err.message); });
     //const cityLatLong = {
     // "Mumbai": { latitude: 19.0760, longitude: 72.8777 },
     // "Delhi": { latitude: 28.7041, longitude: 77.1025 },
@@ -269,8 +255,8 @@ router.post('/execute', async (req, res) => {
         // Extract the WPet column values
         const wpetValues = lines.slice(1).map(line => {
           const columns = line.trim().split(/\s+/);
-          for (let i = 0; i < columns.length; i++) {
-            if (columns[i] === 'CC') {
+          for(let i = 0; i < columns.length; i++) {
+            if(columns[i] === 'CC') {
               console.log(`CC found at index ${i}`);
             }
           }
@@ -278,9 +264,9 @@ router.post('/execute', async (req, res) => {
         }).filter(value => !isNaN(value));
         const ccValues = lines.slice(1).map(line => {
           const columns = line.trim().split(/\s+/);
-
+          
           return parseFloat(columns[30]); // Assuming WPet is the 6th last column
-        }).filter(value => !isNaN(value) && value > 0);
+        }).filter(value => !isNaN(value));
 
         // Get the last value from the WPet column
         const lastWpetValue = wpetValues[wpetValues.length - 1];
@@ -291,7 +277,7 @@ router.post('/execute', async (req, res) => {
       }
       console.log("waterFootprint written successfully");
 
-      for (const filePath of [actualYeildFile, idealYeildFile]) {
+      for (const filePath of[actualYeildFile, idealYeildFile]) {
 
         const data = await fs.readFile(filePath, 'utf8');
 
@@ -323,9 +309,9 @@ router.post('/execute', async (req, res) => {
             dap: columns[3],
             irri: columns[5]
           };
-        }).filter(row => !isNaN(row.day) && !isNaN(row.month) && !isNaN(row.dap) && !isNaN(row.irri) && row.dap > 0 && row.irri > 0);
+        }).filter(row => !isNaN(row.day) && !isNaN(row.month) && !isNaN(row.dap) && !isNaN(row.irri));
         resultJson[i++] = irrigationTable;
-
+        
       }
       console.log("irrigation table written successfully");
       console.log(resultJson);

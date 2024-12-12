@@ -4,4 +4,4 @@ Biomass and Yield at Multiple cuttings
     Nr   Day  Month Year   DAP Interval  Biomass    Sum(B)   Dry-Yield  Sum(Y) Fresh-Yield  Sum(Y)
                                  days     ton/ha    ton/ha    ton/ha    ton/ha    ton/ha    ton/ha
      0    22     1  1996                             0.000               0.000               0.000
-  9999    11     5  1996                             1.300               0.507              10.149
+  9999    11     5  1996                            10.503               5.147             102.934

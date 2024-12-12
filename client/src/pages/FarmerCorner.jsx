@@ -21,7 +21,7 @@ const DailyCalculator = () => {
             {
               question: "Enter the crop name?",
               inputType: "dropdown",
-              options: ["Tomato","Broccoli", "Brussel Sprouts", "Cabbage", "Carrots", "Cauliflower", "Celery", "Garlic", "Lettuce", "Spinach", "Radish", "Egg Plant", "Sweet Peppers (bell)", "Sweet Potato", "Chick pea", "Beans, green", "Beans, dry and Pulses", "Cacao", "Kiwi", "Date Palms", "Coffee"],
+              options: ["Broccoli", "Brussel Sprouts", "Cabbage", "Carrots", "Cauliflower", "Celery", "Garlic", "Lettuce", "Spinach", "Radish", "Egg Plant", "Sweet Peppers (bell)", "Sweet Potato", "Chick pea", "Beans, green", "Beans, dry and Pulses", "Cacao", "Kiwi", "Date Palms", "Coffee"],
             },
             {
               question: "Select your location?",
@@ -196,8 +196,8 @@ const DailyCalculator = () => {
 
   const sendToServer = async (payload) => {
     await axios.post("http://localhost:5000/api/getData", payload).then(response => {
-      console.log(response);
-      navigate("/dashboard/farmerResult", { state: { ideal: [20, 20, 20, 20] } });
+      console.log(response.data);
+      navigate("/dashboard/farmerResult", { state: response.data });
     });
   };
 
