@@ -37,12 +37,7 @@ const FarmQuestionnaire = {
                 {
                     question: "What is the total area of your farm?(Square Meters)",
                     inputType: "number",
-                },
-                {
-                    question: "What is the primary source of water for irrigation?",
-                    options: ["Canal", "Borewell", "River"],
-                },
-
+                },                
                 {
                     question: "If yes, what is the motor's horsepower (HP)?",
                     inputType: "number",
@@ -61,12 +56,7 @@ const FarmQuestionnaire = {
                     question: "How many hours do you irrigate in one session?",
                     inputType: "number",
                     unit: "Hours",
-                },
-                {
-                    question: "How often do you irrigate your field in a week?",
-                    inputType: "number",
-                    
-                },
+                },                
                 {
                     question: "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
                     options: [
@@ -90,11 +80,7 @@ const FarmQuestionnaire = {
                         "Every 3 Days",
                         "Once a Week"
                     ],
-                },
-                {
-                    question: "Do you increase or decrease irrigation based on the crop phase?",
-                    options: ["Yes", "No"],
-                },
+                },                
             ],
         },
         ],

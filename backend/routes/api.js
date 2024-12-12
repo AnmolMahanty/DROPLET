@@ -79,6 +79,36 @@ const cityLatLong = {
   "Udaipur": { latitude: 24.5854, longitude: 73.7125 },
   "Bhubaneswar": { latitude: 20.2961, longitude: 85.8245 }
 };
+
+router.get('/testIrri',async(req,res)=>{
+  const userInputs =  {
+    0: "Cabbage",
+    1: "Mumbai",
+    2: "2023-01-10",
+    3: "Drip Irrigation",
+    4: "1000",
+    5: "5",
+    6: "10",
+    7: "5",
+    8: "3",
+    9: "Every 3 Days",
+    10: "Every 2 Days",
+    11: "Once a Week"
+}
+
+      try {
+          const result = await irrGen.generateIrrigationSchedule(userInputs);
+          console.log(result.message);
+          console.log("File Path:", result.filePath);
+          console.log("Irrigation Details:", result.irrigationDetails);
+      } catch (error) {
+          console.error("Error:", error.message);
+      }
+      
+  
+
+});
+
 router.post('/getData', async (req, res) => {
   try {
     console.log(req.body);
