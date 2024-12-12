@@ -4,33 +4,37 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
   const [selected, setSelected] = useState("dish");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleDishFootprintClick = () => {
     setSelected("dish");
     navigate("dishCalculator");
+    setIsMenuOpen(false);
   };
 
   const handleDailyCalculatorClick = () => {
     setSelected("daily");
     navigate("dailyCalculator");
+    setIsMenuOpen(false);
   };
 
   const handleFarmerCornerClick = () => {
     setSelected("farmer");
     navigate("farmersCorner");
+    setIsMenuOpen(false);
   };
 
   const handleBlogClick = () => {
     setSelected("blog");
     navigate("blog");
+    setIsMenuOpen(false);
   };
 
   return (
     <>
-      <div className="relative w-full h-16 flex justify-between items-center px-12 border border-black/5 bg-blue-950">
-        <div className="flex items-center gap-2 ">
+      <div className="relative w-full h-16 flex justify-between items-center px-4 md:px-12 border border-black/5 bg-blue-950">
+        <div className="flex items-center gap-2">
           <svg
             width="26"
             height="26"
@@ -45,41 +49,89 @@ const Dashboard = () => {
           </svg>
           <p className="text-xl font-medium text-white">Droplet</p>
         </div>
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white/70 text-md w-fit flex justify-between gap-9">
+
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden text-white"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <svg 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              d="M4 6H20M4 12H20M4 18H20" 
+              stroke="white" 
+              strokeWidth="2" 
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white/70 text-md w-fit justify-between gap-9">
           <div
-            className={`cursor-pointer ${
-              selected === "dish" ? "text-white" : ""
-            }`}
+            className={`cursor-pointer ${selected === "dish" ? "text-white" : ""}`}
             onClick={handleDishFootprintClick}
           >
             Dish Footprint
           </div>
           <div
-            className={`cursor-pointer ${
-              selected === "daily" ? "text-white" : ""
-            }`}
+            className={`cursor-pointer ${selected === "daily" ? "text-white" : ""}`}
             onClick={handleDailyCalculatorClick}
           >
             Daily Calculator
           </div>
           <div
-            className={`cursor-pointer ${
-              selected === "farmer" ? "text-white" : ""
-            }`}
+            className={`cursor-pointer ${selected === "farmer" ? "text-white" : ""}`}
             onClick={handleFarmerCornerClick}
           >
             Farmer's Corner
           </div>
           <div
-            className={`cursor-pointer ${
-              selected === "blog" ? "text-white" : ""
-            }`}
+            className={`cursor-pointer ${selected === "blog" ? "text-white" : ""}`}
             onClick={handleBlogClick}
           >
             Blogs
           </div>
         </div>
-        <div className="cursor-pointer">
+
+        {/* Mobile Navigation Menu */}
+        {isMenuOpen && (
+          <div className="absolute top-16 left-0 w-full bg-blue-950 md:hidden">
+            <div className="flex flex-col text-white/70 py-4">
+              <div
+                className={`cursor-pointer px-4 py-2 ${selected === "dish" ? "text-white bg-blue-900" : ""}`}
+                onClick={handleDishFootprintClick}
+              >
+                Dish Footprint
+              </div>
+              <div
+                className={`cursor-pointer px-4 py-2 ${selected === "daily" ? "text-white bg-blue-900" : ""}`}
+                onClick={handleDailyCalculatorClick}
+              >
+                Daily Calculator
+              </div>
+              <div
+                className={`cursor-pointer px-4 py-2 ${selected === "farmer" ? "text-white bg-blue-900" : ""}`}
+                onClick={handleFarmerCornerClick}
+              >
+                Farmer's Corner
+              </div>
+              <div
+                className={`cursor-pointer px-4 py-2 ${selected === "blog" ? "text-white bg-blue-900" : ""}`}
+                onClick={handleBlogClick}
+              >
+                Blogs
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="cursor-pointer hidden md:block">
           <svg
             width="26"
             height="26"

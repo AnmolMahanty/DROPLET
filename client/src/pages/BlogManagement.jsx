@@ -115,13 +115,13 @@ const BlogManagement = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold text-blue-700">Droplet Water Conservation Blog</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
+        <h1 className="text-2xl md:text-4xl font-bold text-blue-700">Droplet Water Conservation Blog</h1>
         {isAdmin() && (
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <Button
-                className="bg-green-500 hover:bg-green-600 text-white"
+                className="bg-green-500 hover:bg-green-600 text-white w-full md:w-auto"
                 onClick={() => {
                   setCurrentBlog({
                     id: null,
@@ -135,13 +135,13 @@ const BlogManagement = () => {
                 <PlusIcon className="mr-2" /> Add New Blog
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] w-full">
               <DialogHeader>
                 <DialogTitle>{currentBlog.id ? 'Edit Blog' : 'Add New Blog'}</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="title" className="text-right">
+                <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+                  <label htmlFor="title" className="text-right md:col-span-1">
                     Title
                   </label>
                   <Input
@@ -150,11 +150,11 @@ const BlogManagement = () => {
                     onChange={(e) =>
                       setCurrentBlog({ ...currentBlog, title: e.target.value })
                     }
-                    className="col-span-3"
+                    className="md:col-span-3"
                   />
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="author" className="text-right">
+                <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+                  <label htmlFor="author" className="text-right md:col-span-1">
                     Author
                   </label>
                   <Input
@@ -163,11 +163,11 @@ const BlogManagement = () => {
                     onChange={(e) =>
                       setCurrentBlog({ ...currentBlog, author: e.target.value })
                     }
-                    className="col-span-3"
+                    className="md:col-span-3"
                   />
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="content" className="text-right">
+                <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+                  <label htmlFor="content" className="text-right md:col-span-1">
                     Content
                   </label>
                   <Textarea
@@ -176,7 +176,7 @@ const BlogManagement = () => {
                     onChange={(e) =>
                       setCurrentBlog({ ...currentBlog, content: e.target.value })
                     }
-                    className="col-span-3 min-h-[200px]"
+                    className="md:col-span-3 min-h-[200px]"
                   />
                 </div>
               </div>
@@ -196,7 +196,7 @@ const BlogManagement = () => {
         )}
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map((blog) => (
           <Card
             key={blog.id}
@@ -204,7 +204,9 @@ const BlogManagement = () => {
           >
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
-                <span className="text-xl text-blue-800">{blog.title}</span>
+                <span className="text-xl text-blue-800 break-words">
+                  {blog.title}
+                </span>
                 {isAdmin() && (
                   <div className="flex space-x-2">
                     <Button
@@ -228,17 +230,17 @@ const BlogManagement = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-2 italic">
+              <p className="text-gray-600 mb-2 italic text-sm sm:text-base">
                 By {blog.author} | {blog.date}
               </p>
-              <p className="text-gray-800">
+              <p className="text-gray-800 text-sm sm:text-base">
                 {expandedBlogId === blog.id
                   ? blog.content
                   : `${blog.content.slice(0, 100)}...`}
               </p>
               <Button
                 variant="link"
-                className="pl-0 text-blue-600 hover:text-blue-800"
+                className="pl-0 text-blue-600 hover:text-blue-800 text-sm"
                 onClick={() => toggleExpand(blog.id)}
               >
                 {expandedBlogId === blog.id ? 'Show Less' : 'Read More'}
@@ -251,4 +253,4 @@ const BlogManagement = () => {
   );
 };
 
-export default BlogManagement;
+export default BlogManagement;

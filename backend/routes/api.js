@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const irrGen = require('../routes/irrigationGenerator');
 const { createProjectFile } = require('./createPro');
+const { time } = require('console');
 
 
 // {
@@ -90,7 +91,7 @@ router.post('/getData', async (req, res) => {
     let endDate = new Date(endDateCal).toISOString().split('T')[0];
     // Ensure endDate does not exceed the maximum allowed date
     const today = new Date();
-    const maxAllowedDateCal = today.getTime()-1000*60*60*24;
+    const maxAllowedDateCal = today.getTime() - 1000 * 60 * 60 * 24;
     const maxAllowedDate = new Date(maxAllowedDateCal).toISOString().split('T')[0];
 
     // Ensure endDate does not exceed the maximum allowed date
@@ -206,11 +207,11 @@ ${et0.join('\r\n')}\r\n`;
 
     console.log('Files written successfully');
     try {
-      var executeResponse = await axios.post('http://localhost:5000/api/execute');
+      var executeResponse = await axios.post('http://localhost:5000/api/execute', { cropName: cropName, location: location, startDate: startDate });
       res.status(executeResponse.status).send(executeResponse.data);
     }
     catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   } catch (error) {
     console.error(`Error fetching JSON file: ${error}`);
@@ -329,14 +330,21 @@ router.post('/execute', async (req, res) => {
       }
       console.log("irrigation table written successfully");
       console.log(resultJson);
-      res.json(resultJson);
+      res.json( resultJson);
+      await axios.post('http://localhost:5000/database/storeCropData', {
+        cropName: req.body.cropName,
+        location: req.body.location,
+        startDate: req.body.startDate,
+        waterFootprint: resultJson[2],
+        timestamp: Date.now()
+      }).then(res => { console.log(res.message); }).catch(err => { console.log(err.message); });
 
-
-      // res.json({ message: 'Executable ran successfully', output: lastWpetValue });
+      
     } catch (err) {
       console.error(`Error reading output file: ${err}`);
       return res.status(500).json({ error: 'Failed to read output file' });
     }
+   
 
   });
   // }

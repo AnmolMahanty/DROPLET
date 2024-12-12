@@ -12,6 +12,7 @@ app.use(express.json());
 app.use('/dwf',dwfRoutes);
 app.use('/api',apiRoutes);
 app.use('/auth',authRoutes);
+app.use('/database',require('./routes/database'));
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

@@ -7,8 +7,6 @@ import axios from 'axios';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { initializeApp } from "firebase/app";
 
-
-
 const SignIn = () => {
   const navigate = useNavigate();
   const firebaseConfig = {
@@ -21,19 +19,13 @@ const SignIn = () => {
     measurementId: "G-Q1E2DFHD18"
   };
 
-  // Function to initialize Firebase and return services
-
   const handleGoogleSignIn = async () => {
     try {
       let app;
-
       app = initializeApp(firebaseConfig);
-
-
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
-
-
+      
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
@@ -44,13 +36,10 @@ const SignIn = () => {
       if (response.status === 200) {
         navigate("/dashboard/dishCalculator");
       }
-      // Use the custom token for authentication
     } catch (error) {
       console.error('Error signing in with Google:', error);
     }
   };
-
-
 
   const handleSignUpClick = () => {
     navigate("/signup");
@@ -58,39 +47,40 @@ const SignIn = () => {
 
   return (
     <>
-      <div className="relative flex items-center justify-center h-[100vh]">
-        <div className="w-full max-w-[420px] rounded-xl flex flex-col justify-center items-center px-8 bg-white py-16 z-10">
-          <div className="w-full max-w-md space-y-6">
+      <div className="relative flex items-center justify-center min-h-screen w-full px-4 py-8 md:px-0 md:py-0">
+        <div className="w-full max-w-[420px] rounded-xl flex flex-col justify-center items-center px-4 sm:px-8 bg-white py-8 sm:py-16 z-10 mx-4 md:mx-0">
+          <div className="w-full max-w-md space-y-4 sm:space-y-6">
             <div className="flex flex-col items-center justify-center">
               <div className="flex items-center gap-2 cursor-pointer">
                 <img
                   src="\src\assets\droplet-logo.svg"
                   alt="droplet-logo"
-                  width={48}
+                  className="w-8 sm:w-12"
                 />
-                <p className="text-3xl text-[#2563eb] font-medium">Droplet</p>
+                <p className="text-2xl sm:text-3xl text-[#2563eb] font-medium">Droplet</p>
               </div>
-              <p className="text-center mt-3 text-sm text-gray-600 leading-relaxed max-w-sm mx-auto">
+              <p className="text-center mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed max-w-sm mx-auto px-2">
                 Welcome back! Let's continue our journey towards water
                 conservation and a sustainable future.
               </p>
             </div>
-            <div className="mt-6 space-y-6">
+            <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
               <div className="space-y-4">
-                <button onClick={handleGoogleSignIn} className="w-full flex items-center justify-center space-x-3 py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                <button 
+                  onClick={handleGoogleSignIn} 
+                  className="w-full flex items-center justify-center space-x-3 py-2.5 sm:py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                >
                   <img
                     src="src/assets/google.svg"
                     alt="google-logo"
-                    width={20}
-                    height={20}
+                    className="w-4 h-4 sm:w-5 sm:h-5"
                   />
                   <span>Sign in with Google</span>
                 </button>
-
               </div>
             </div>
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+            <div className="mt-4 sm:mt-6 text-center">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Don't have an account?{" "}
                 <a
                   onClick={handleSignUpClick}
@@ -103,12 +93,13 @@ const SignIn = () => {
           </div>
         </div>
 
-        <div className="absolute object-cover w-full h-full inset-0">
+        <div className="absolute inset-0">
           <video
             autoPlay={true}
             loop={true}
-            width="100%"
-            className="absolute w-full h-full inset-0 object-cover"
+            className="absolute w-full h-full object-cover"
+            playsInline
+            muted
           >
             <source src={video} type="video/mp4" />
             Your browser does not support the video tag.

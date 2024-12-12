@@ -87,7 +87,7 @@ export async function generateIrrigationSchedule(jsonData) {
 
     const irrigationSchedule = [];
     let currentDay = 1;
-
+console.log(initialFrequency+" "+growthFrequency+" "+maturityFrequency+" initialDays:"+initialDays+" growingDays:"+growingDays+" maturityDays:"+maturityDays+" totalDays:"+totalDays);
     while (currentDay <= initialDays) {
         irrigationSchedule.push({ day: currentDay, depth: (totalWaterDepthPerWeek / 7).toFixed(2), ecw: 1.5 });
         currentDay += initialFrequency;

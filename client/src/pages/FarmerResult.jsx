@@ -1605,7 +1605,7 @@ const FarmerResult = () => {
 
 
   return (
-    <div className="flex flex-col  gap-6 py-8 px-16 bg-gray-100 min-h-screen">
+    <div className="flex flex-col  gap-6 py-8 px-24 bg-gray-100 min-h-screen">
       {/* Ideal Crop Values Section */}
       <div className="flex flex-col w-full px-21 justify-center items-center">
         <h3 className="text-3xl font-semibold mb-2 pb-4">Canopy Development</h3>
@@ -1633,7 +1633,7 @@ const FarmerResult = () => {
                 <td className="border font-medium px-4 py-2">{row.day}</td>
                 <td className="border font-medium px-4 py-2">{row.month}</td>
                 <td className="border font-medium px-4 py-2">{row.dap}</td>
-                <td className="border font-medium px-4 py-2">{row.irri}</td>
+                <td className="border font-medium` px-4 py-2">{row.irri}</td>
               </tr>
             ))}
           </tbody>

@@ -10,6 +10,7 @@ const DailyCalculator = () => {
   const [answers, setAnswers] = useState({});
   const [calculationResult, setCalculationResult] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // Initialize questionnaire data
   useEffect(() => {
@@ -27,55 +28,7 @@ const DailyCalculator = () => {
               question: "Select your location?",
               inputType: "dropdown",
               options: [
-                "Delhi",
-                "Mumbai",
-                "Lucknow",
-                "Bhopal",
-                "Chennai",
-                "Hyderabad",
-                "Bangalore",
-                "Ahmedabad",
-                "Kolkata",
-                "Pune",
-                "Jaipur",
-                "Patna",
-                "Raipur",
-                "Nagpur",
-                "Surat",
-                "Coimbatore",
-                "Chandigarh",
-                "Guwahati",
-                "Indore",
-                "Ludhiana",
-                "Amritsar",
-                "Vijayawada",
-                "Varanasi",
-                "Kanpur",
-                "Mysore",
-                "Thiruvananthapuram",
-                "Ranchi",
-                "Jodhpur",
-                "Allahabad",
-                "Madurai",
-                "Vellore",
-                "Dharwad",
-                "Puducherry",
-                "Kozhikode",
-                "Jamshedpur",
-                "Dehradun",
-                "Shimla",
-                "Shillong",
-                "Cuttack",
-                "Dibrugarh",
-                "Agartala",
-                "Panaji",
-                "Imphal",
-                "Aizawl",
-                "Itanagar",
-                "Gangtok",
-                "Silchar",
-                "Udaipur",
-                "Bhubaneswar"
+                "Delhi", "Mumbai", "Lucknow", "Bhopal", "Chennai", "Hyderabad", "Bangalore", "Ahmedabad", "Kolkata", "Pune", "Jaipur", "Patna", "Raipur", "Nagpur", "Surat", "Coimbatore", "Chandigarh", "Guwahati", "Indore", "Ludhiana", "Amritsar", "Vijayawada", "Varanasi", "Kanpur", "Mysore", "Thiruvananthapuram", "Ranchi", "Jodhpur", "Allahabad", "Madurai", "Vellore", "Dharwad", "Puducherry", "Kozhikode", "Jamshedpur", "Dehradun", "Shimla", "Shillong", "Cuttack", "Dibrugarh", "Agartala", "Panaji", "Imphal", "Aizawl", "Itanagar", "Gangtok", "Silchar", "Udaipur", "Bhubaneswar"
               ],
             },
             {
@@ -97,13 +50,15 @@ const DailyCalculator = () => {
               question: "What is the total area of your farm?(Square Meters)",
               inputType: "number",
             },
-            {//TODO : add handling for no motor usage logic
+            {
               question: "What is the motor's horsepower (HP)?",
               inputType: "number",
+              constraints: { min: 0, max: 50 },
             },
             {
               question: "What is the diameter of the pipe used for irrigation?(inches)",
               inputType: "number",
+              constraints: { min: 0, max: 10 },
             },
           ],
         },
@@ -114,30 +69,23 @@ const DailyCalculator = () => {
               question: "How many hours do you irrigate in one session?",
               inputType: "number",
               unit: "Hours",
+              constraints: { min: 0, max: 24 },
             },
             {
-              question: "How often do you irrigate your field in a week?",
-              inputType: "number",
-            },
-            {
-              question:
-                "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
+              question: "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
             {
-              question:
-                "What is the usual time interval between irrigation sessions during each crop growth phase?",
+              question: "What is the usual time interval between irrigation sessions during each crop growth phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
             {
-              question:
-                "What is the usual time interval between irrigation sessions during each crop maturity phase?",
+              question: "What is the usual time interval between irrigation sessions during each crop maturity phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
-            
           ],
         },
       ],
@@ -147,52 +95,70 @@ const DailyCalculator = () => {
     setIsLoading(false);
   }, []);
 
-  // Memoize the questions
   const questions = useMemo(
-    () =>
-      questionnaire
-        ? questionnaire.sections.flatMap((section) => section.questions)
-        : [],
+    () => questionnaire ? questionnaire.sections.flatMap((section) => section.questions) : [],
     [questionnaire]
   );
 
-  // Navigation handlers
   const handleNext = useCallback(() => {
+    const currentAnswer = answers[currentQuestionIndex];
+    const currentQuestion = questions[currentQuestionIndex];
+
+    if (!currentAnswer) {
+      setErrorMessage("This question is required. Please provide an answer.");
+      return;
+    }
+
+    setErrorMessage(null);
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     }
-  }, [currentQuestionIndex, questions.length]);
+  }, [currentQuestionIndex, questions, answers]);
 
   const handleBack = useCallback(() => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
+      setErrorMessage(null);
     }
   }, [currentQuestionIndex]);
 
   const handleAnswerChange = useCallback(
     (answer) => {
+      const currentQuestion = questions[currentQuestionIndex];
+      if (currentQuestion.constraints) {
+        const { min, max } = currentQuestion.constraints;
+        if (answer < min || answer > max) {
+          setErrorMessage(`Invalid input: Please enter a value between ${min} and ${max}.`);
+          return;
+        }
+      }
       setAnswers((prev) => ({
         ...prev,
         [currentQuestionIndex]: answer,
       }));
+      setErrorMessage(null);
     },
-    [currentQuestionIndex]
+    [currentQuestionIndex, questions]
   );
 
-  // Submit handler
   const handleSubmit = useCallback(() => {
+    const unansweredQuestions = questions.some((_, index) => !answers[index]);
+
+    if (unansweredQuestions) {
+      setErrorMessage("All questions are compulsory. Please complete the questionnaire.");
+      return;
+    }
+
     const payload = {
       answers,
-      timestamp: new Date().toISOString(), // optional metadata
+      timestamp: new Date().toISOString(),
     };
 
-    // Log the payload to the console for testing
     console.log("Payload to be submitted:", payload);
     sendToServer(payload);
 
-    // You can also display a mock success message
     setCalculationResult({ message: "Data submission simulated successfully!" });
-  }, [answers]);
+  }, [answers, questions]);
 
   const sendToServer = async (payload) => {
     await axios.post("http://localhost:5000/api/getData", payload).then(response => {
@@ -201,29 +167,27 @@ const DailyCalculator = () => {
     });
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="flex items-center justify-center min-h-screen bg-blue-50"
+        className="flex items-center justify-center min-h-screen bg-blue-50 px-4"
       >
-        <p>Loading...</p>
+        <p className="text-lg">Loading...</p>
       </motion.div>
     );
   }
 
-  // Result view
   if (calculationResult) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-blue-50">
-        <div className="bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-2xl font-bold mb-4">Submission Successful!</h2>
-          <p className="text-xl mb-4">Thank you for your submission.</p>
+      <div className="flex items-center justify-center min-h-screen bg-blue-50 px-4">
+        <div className="bg-white shadow-lg rounded-lg p-4 md:p-8 w-full max-w-lg">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">Submission Successful!</h2>
+          <p className="text-lg md:text-xl mb-4">Thank you for your submission.</p>
           <button
             onClick={() => setCalculationResult(null)}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-blue-500 text-white py-2 px-4 rounded w-full md:w-auto"
           >
             Submit Another Response
           </button>
@@ -232,35 +196,36 @@ const DailyCalculator = () => {
     );
   }
 
-  // Current question
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-blue-50">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-3/4">
-        <h2 className="text-xl font-bold mb-4">
+    <div className="flex items-center justify-center min-h-screen bg-blue-50 px-4 py-6">
+      <div className="bg-white shadow-lg rounded-lg p-4 md:p-8 w-full max-w-lg">
+        <h2 className="text-lg md:text-xl font-bold mb-4">
           Question {currentQuestionIndex + 1} of {questions.length}
         </h2>
-        <p className="mb-4">{currentQuestion.question}</p>
+        <p className="mb-4 text-sm md:text-base">{currentQuestion.question}</p>
+
+        {errorMessage && (
+          <p className="text-red-500 mb-4 text-sm md:text-base">{errorMessage}</p>
+        )}
 
         <AnimatePresence mode="wait">
           {currentQuestion.inputType === "number" && (
             <input
               type="number"
               value={answers[currentQuestionIndex] || ""}
-              onChange={(e) => handleAnswerChange(e.target.value)}
-              className="w-full p-3 border rounded-lg mb-4"
+              onChange={(e) => handleAnswerChange(Number(e.target.value))}
+              className="w-full p-2 md:p-3 border rounded-lg mb-4 text-sm md:text-base"
             />
           )}
           {currentQuestion.inputType === "dropdown" && (
             <select
               value={answers[currentQuestionIndex] || ""}
               onChange={(e) => handleAnswerChange(e.target.value)}
-              className="w-full p-3 border rounded-lg mb-4"
+              className="w-full p-2 md:p-3 border rounded-lg mb-4 text-sm md:text-base"
             >
-              <option value="" disabled>
-                Select an option
-              </option>
+              <option value="" disabled>Select an option</option>
               {currentQuestion.options.map((option, index) => (
                 <option key={index} value={option}>
                   {option}
@@ -273,30 +238,30 @@ const DailyCalculator = () => {
               type="date"
               value={answers[currentQuestionIndex] || ""}
               onChange={(e) => handleAnswerChange(e.target.value)}
-              className="w-full p-3 border rounded-lg mb-4"
+              className="w-full p-2 md:p-3 border rounded-lg mb-4 text-sm md:text-base"
             />
           )}
         </AnimatePresence>
 
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-4">
           <button
             onClick={handleBack}
             disabled={currentQuestionIndex === 0}
-            className="bg-gray-300 py-2 px-4 rounded disabled:opacity-50"
+            className="bg-gray-300 py-2 px-4 rounded disabled:opacity-50 text-sm md:text-base flex-1 md:flex-none"
           >
             Back
           </button>
           {currentQuestionIndex === questions.length - 1 ? (
             <button
               onClick={handleSubmit}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 rounded text-sm md:text-base flex-1 md:flex-none"
             >
               Submit
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-blue-500 text-white py-2 px-4 rounded text-sm md:text-base flex-1 md:flex-none"
             >
               Next
             </button>
