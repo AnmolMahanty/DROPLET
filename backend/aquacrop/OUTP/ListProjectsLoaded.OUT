@@ -1,4 +1,4 @@
-Intermediate results: None created
+Intermediate results: daily results
 
 Daily output results:
 1. - soil water balance
@@ -16,3 +16,4 @@ Particular results:
 
 
        1. - tom.PRO : Project loaded - default setting of program parameters
+       2. - idealPro.PRO : Project loaded - default setting of program parameters

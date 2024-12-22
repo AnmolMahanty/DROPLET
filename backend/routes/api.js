@@ -123,14 +123,14 @@ router.post('/getData', async (req, res) => {
     const today = new Date();
     const maxAllowedDateCal = today.getTime() - 1000 * 60 * 60 * 24;
     const maxAllowedDate = new Date(maxAllowedDateCal).toISOString().split('T')[0];
-
+    
     // Ensure endDate does not exceed the maximum allowed date
     if (endDate > maxAllowedDate) {
       endDate = maxAllowedDate;
     }
 
     const { latitude, longitude } = cityLatLong[location];
-    console.log(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`)
+
     const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log("myerror1: " + err.message); });
     //const cityLatLong = {
     // "Mumbai": { latitude: 19.0760, longitude: 72.8777 },
@@ -142,6 +142,21 @@ router.post('/getData', async (req, res) => {
     console.log(climateData.status);
     const data = climateData.data;
 
+    let totalDays= 0;
+    await irrGen.generateIrrigationSchedule(jsonData.answers)
+    .then(result => {
+      console.log(result.message);
+      // console.log("File Path:", result.filePath);
+      // console.log("Irrigation Details:", result.irrigationDetails);
+      totalDays = result.totalDays;
+    })
+    console.log("Total Days: ", totalDays);
+    const startDay = new Date(startDate).getDate();
+    const startMonth = new Date(startDate).getMonth() + 1;
+    const endDateCrop =  Date.parse(startDate) + 1000 * 60 * 60 * 24 * totalDays;
+    const endDay = new Date(endDateCrop).getDate();
+    const endMonth = new Date(endDateCrop).getMonth() + 1;
+
     // Extract data
     const temperaturesMax = data.daily.temperature_2m_max;
     const temperaturesMin = data.daily.temperature_2m_min;
@@ -151,13 +166,13 @@ router.post('/getData', async (req, res) => {
     // Define file paths
     const cliFilePath = path.join(__dirname, 'dombivli.CLI');
     const pluFilePath = path.join(__dirname, 'dombivli.Plu');
-    const tmpFilePath = path.join(__dirname, 'domdbivli.TMP');
+    const tmpFilePath = path.join(__dirname, 'dombivli.TMP');
     const etoFilePath = path.join(__dirname, 'dombivli.ETo');
 
     // Write CLI file
     const cliContent = `Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
  3.0   : AquaCrop Version (January 2009)
-domdbivli.TMP\r
+dombivli.TMP\r
 dombivli.ETo\r
 dombivli.Plu\r
 MaunaLoa.CO2\r`;
@@ -166,8 +181,8 @@ MaunaLoa.CO2\r`;
     // Write PLU file
     const pluContent = `Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
      1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
-     1  : First month of record
+    ${startDay}  : First day of record (1, 11 or 21 for 10-day or 1 for months)
+    ${startMonth}  : First month of record
   1996  : First year of record (1901 if not linked to a specific year)
 
   Total Rain (mm)
@@ -178,8 +193,8 @@ ${rainSum.join('\r\n')}\r\n`;
     // Write TMP file
     const tmpContent = `Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
      1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
-     1  : First month of record
+    ${startDay}    : First day of record (1, 11 or 21 for 10-day or 1 for months)
+    ${startMonth}  : First month of record
   1996  : First year of record (1901 if not linked to a specific year)
 
   Tmin (C)   TMax (C)      
@@ -190,8 +205,8 @@ ${temperaturesMin.map((min, index) => `\t${min}\t${temperaturesMax[index]}`).joi
     // Write ETO file
     const etoContent = `Patancheru, India 1Jan-31Dec1996 - Data by International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)
      1  : Daily records (1=daily, 2=10-daily and 3=monthly data)
-    01  : First day of record (1, 11 or 21 for 10-day or 1 for months)
-     1  : First month of record
+    ${startDay}    : First day of record (1, 11 or 21 for 10-day or 1 for months)
+    ${startMonth}  : First month of record
   1996  : First year of record (1901 if not linked to a specific year)
 
   Average ETo (mm/day)
@@ -199,7 +214,8 @@ ${temperaturesMin.map((min, index) => `\t${min}\t${temperaturesMax[index]}`).joi
 ${et0.join('\r\n')}\r\n`;
 
     fs.writeFile(etoFilePath, etoContent);
-    irrGen.generateIrrigationSchedule(jsonData.answers)
+
+
     //.catch(err => { console.log("myerror2: "+err.message); });
 
     // console.log(cropName.trim().replace(" ", "_"));
@@ -218,12 +234,12 @@ ${et0.join('\r\n')}\r\n`;
     const proData = {
       version: '7.2',
       yearNumber: 1,
-      startDate: { year: 1996, month: 1, day: 22 },
-      endDate: { year: 1996, month: 5, day: 10 },
-      cropStartDate: { year: 1996, month: 1, day: 22 },
-      cropEndDate: { year: 1996, month: 5, day: 10 },
+      startDate: { year: 1996, month: startMonth, day: startDay },
+      endDate: { year: 1996, month: endMonth, day: endDay },
+      cropStartDate: { year: 1996, month: startMonth, day: startDay },
+      cropEndDate: { year: 1996, month: endMonth, day: endDay },
       climateFile: 'dombivli.CLI',
-      temperatureFile: 'domdbivli.TMP',
+      temperatureFile: 'dombivli.TMP',
       referenceETFile: 'dombivli.ETo',
       rainFile: 'dombivli.Plu',
       co2File: 'MaunaLoa.CO2',
@@ -232,7 +248,7 @@ ${et0.join('\r\n')}\r\n`;
       soilFile: 'SandyLoam.SOL',
       idealIrr: 'irr1.IRR'
     };
-    // createProjectFile(proData);
+    createProjectFile(proData);
 
 
     console.log('Files written successfully');
@@ -244,8 +260,8 @@ ${et0.join('\r\n')}\r\n`;
       console.log(err.message);
     }
   } catch (error) {
-    console.error(`Error fetching JSON file: ${error}`);
-    res.status(500).send('Error fetching JSON file');
+    console.error(`Error fetching data: ${error}`);
+    res.status(500).send('Error fetching data');
   }
 });
 
@@ -283,8 +299,8 @@ router.post('/execute', async (req, res) => {
       return res.status(500).json({ error: 'Failed to run executable', details: stderr });
     }
 
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
+    // console.log(`stdout: ${stdout}`);
+    // console.error(`stderr: ${stderr}`);
     // Read the output file
     try {
       const resultJson = {};
@@ -300,11 +316,11 @@ router.post('/execute', async (req, res) => {
         // Extract the WPet column values
         const wpetValues = lines.slice(1).map(line => {
           const columns = line.trim().split(/\s+/);
-          for (let i = 0; i < columns.length; i++) {
-            if (columns[i] === 'CC') {
-              console.log(`CC found at index ${i}`);
-            }
-          }
+          // for (let i = 0; i < columns.length; i++) {
+          //   if (columns[i] === 'CC') {
+          //     console.log(`CC found at index ${i}`);
+          //   }
+          // }
           return parseFloat(columns[44]); // Assuming WPet is the 6th last column
         }).filter(value => !isNaN(value));
         const ccValues = lines.slice(1).map(line => {
@@ -359,7 +375,7 @@ router.post('/execute', async (req, res) => {
 
       }
       console.log("irrigation table written successfully");
-      console.log(resultJson);
+      // console.log(resultJson);
       res.json( resultJson);
       await axios.post('http://localhost:5000/database/storeCropData', {
         cropName: req.body.cropName,
@@ -367,7 +383,7 @@ router.post('/execute', async (req, res) => {
         startDate: req.body.startDate,
         waterFootprint: resultJson[2],
         timestamp: Date.now()
-      }).then(res => { console.log(res.message); }).catch(err => { console.log(err.message); });
+      }).then(res => { console.log(res.data); }).catch(err => { console.log(err.message); });
 
       
     } catch (err) {

@@ -72,6 +72,11 @@ const DailyCalculator = () => {
               constraints: { min: 0, max: 24 },
             },
             {
+              question: "How often do you irrigate your field in a week?",
+              inputType: "number",
+              constraints: { min: 0, max: 7 },
+            },
+            {
               question: "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],

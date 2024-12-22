@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const admin = require('firebase-admin');
+const {admin:adminObj} = require('./auth');
+const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
+
 // Initialize Firebase Admin SDK
 
 
-const db = admin.firestore();
+const db = getFirestore();
 
 router.post('/storeCropData', async (req, res) => {
     try {
@@ -13,7 +15,7 @@ router.post('/storeCropData', async (req, res) => {
         const cropData = req.body;
         console.log(cropData);
         //firebase storeCropData
-        admin.firestore().collection('cropData').doc().set({
+        db.collection('cropData').doc().set({
             "cropName": cropData.cropName,
             "location": cropData.location,
             "startDate": cropData.startDate,
@@ -21,10 +23,10 @@ router.post('/storeCropData', async (req, res) => {
             "timestamp": cropData.timestamp
         });
 
-        res.send(" Crop data stored successfully");
+        res.status(200).send(" Crop data stored successfully");
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
     }
 });
 module.exports = router;

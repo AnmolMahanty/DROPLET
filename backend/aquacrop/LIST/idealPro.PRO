@@ -1,40 +1,40 @@
 
-      7.2       : AquaCrop Version (August 2024)
-      1         : Year number of cultivation (Seeding/planting year)
-  34720         : First day of simulation period - 22 January 1996  
-  34829         : Last day of simulation period - 10 May 1996      
-  34720         : First day of cropping period - 22 January 1996  
-  34829         : Last day of cropping period - 10 May 1996      
+		7.2       : AquaCrop Version
+   1         : Year number of cultivation (Seeding/planting year)
+   35102         : First day of simulation period - 9 February 1996
+   35272         : Last day of simulation period - 29 July 1996
+   35102         : First day of cropping period - 9 February 1996
+   35272         : Last day of cropping period - 29 July 1996
 -- 1. Climate (CLI) file
-   dombivli.cli
-   C:\sarthak\DROPLET\backend\routes\
+   dombivli.CLI
+   D:\sarthak\hackathon\sih\DROPLET\backend\routes\
    1.1 Temperature (Tnx or TMP) file
-   dombivli.tnx
-   C:\sarthak\DROPLET\backend\routes\
+   dombivli.TMP
+   D:\sarthak\hackathon\sih\DROPLET\backend\routes\
    1.2 Reference ET (ETo) file
-   dombivli.eto
-   C:\sarthak\DROPLET\backend\routes\
+   dombivli.ETo
+   D:\sarthak\hackathon\sih\DROPLET\backend\routes\
    1.3 Rain (PLU) file
-   dombivli.plu
-   C:\sarthak\DROPLET\backend\routes\
+   dombivli.Plu
+   D:\sarthak\hackathon\sih\DROPLET\backend\routes\
    1.4 Atmospheric CO2 concentration (CO2) file
    MaunaLoa.CO2
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\SIMUL\
+   D:\sarthak\hackathon\sih\DROPLET\backend\routes\
 -- 2. Calendar (CAL) file
    (None)
    (None)
 -- 3. Crop (CRO) file
    selectedCrop.CRO
-   C:\sarthak\DROPLET\backend\routes\
+   D:\sarthak\hackathon\sih\DROPLET\backend\routes\
 -- 4. Irrigation management (IRR) file
    irr1.IRR
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   D:\sarthak\hackathon\sih\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
 -- 5. Field management (MAN) file
    (None)
    (None)
 -- 6. Soil profile (SOL) file
    SandyLoam.SOL
-   C:\sarthak\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
+   D:\sarthak\hackathon\sih\DROPLET\backend\aquacrop\AquaCropV72No02092024\DATA\
 -- 7. Groundwater table (GWT) file
    (None)
    (None)

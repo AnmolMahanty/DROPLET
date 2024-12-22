@@ -1,13 +1,25 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+const fs = require('fs');
+const path = require('path');
+const { fileURLToPath } = require('url');
+const { dirname } = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+function checkFileExists(filePath, fileName) {
+   if (fs.existsSync(path.join(filePath, fileName))) {
+      return filePath;
+   } else {
+      console.log(`File does not exist: ${path.join(filePath, fileName)}`);
+      return null;
+   }
+}
 
-
-export function createProjectFile(data) {
+function getMonthName(monthNumber) {
+   const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+   ];
+   return months[monthNumber - 1];
+}
+function createProjectFile(data) {
    const {
       version,
       yearNumber,
@@ -30,16 +42,22 @@ export function createProjectFile(data) {
    const endJulian = dateToJulian(endDate.year, endDate.month, endDate.day);
    const cropStartJulian = dateToJulian(cropStartDate.year, cropStartDate.month, cropStartDate.day);
    const cropEndJulian = dateToJulian(cropEndDate.year, cropEndDate.month, cropEndDate.day);
-   const aquaData = path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA');
-   const myData = path.join(__dirname);
-console.log("done");
+   const aquaData = path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')+'\\';
+   const myData = path.join(__dirname)+'\\';
+   const climateFilePath = checkFileExists(myData, climateFile) || aquaData;
+   const temperatureFilePath = checkFileExists(myData, temperatureFile) || aquaData;
+   const referenceETFilePath = checkFileExists(myData, referenceETFile) || aquaData;
+   const rainFilePath = checkFileExists(myData, rainFile) || aquaData;
+   const cropFilePath = checkFileExists(myData, cropFile) || aquaData;
+   const idealIrrFilePath = checkFileExists(aquaData, idealIrr) || aquaData;
+   console.log("done");
 
-   const content = `\n${version}       : AquaCrop Version
-      ${yearNumber}         : Year number of cultivation (Seeding/planting year)
-  ${startJulian}         : First day of simulation period - ${startDate.day} ${startDate.month} ${startDate.year}
-  ${endJulian}         : Last day of simulation period - ${endDate.day} ${endDate.month} ${endDate.year}
-  ${cropStartJulian}         : First day of cropping period - ${cropStartDate.day} ${cropStartDate.month} ${cropStartDate.year}
-  ${cropEndJulian}         : Last day of cropping period - ${cropEndDate.day} ${cropEndDate.month} ${cropEndDate.year}
+   const content = `\n\t\t${version}       : AquaCrop Version
+   ${yearNumber}         : Year number of cultivation (Seeding/planting year)
+   ${startJulian}         : First day of simulation period - ${startDate.day} ${getMonthName(startDate.month)} ${startDate.year}
+   ${endJulian}         : Last day of simulation period - ${endDate.day} ${getMonthName(endDate.month)} ${endDate.year}
+   ${cropStartJulian}         : First day of cropping period - ${cropStartDate.day} ${getMonthName(cropStartDate.month)} ${cropStartDate.year}
+   ${cropEndJulian}         : Last day of cropping period - ${cropEndDate.day} ${getMonthName(cropEndDate.month)} ${cropEndDate.year}
 -- 1. Climate (CLI) file
    ${climateFile}
    ${myData}
@@ -48,13 +66,13 @@ console.log("done");
    ${myData}
    1.2 Reference ET (ETo) file
    ${referenceETFile}
-   ${ myData }
+   ${myData}
    1.3 Rain (PLU) file
    ${rainFile}
    ${myData}
    1.4 Atmospheric CO2 concentration (CO2) file
    ${co2File}
-   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'SIMUL')}
+   ${myData}
 -- 2. Calendar (CAL) file
    (None)
    (None)
@@ -69,7 +87,7 @@ console.log("done");
    (None)
 -- 6. Soil profile (SOL) file
    ${soilFile}
-   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')}
+   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')}\\
 -- 7. Groundwater table (GWT) file
    (None)
    (None)
@@ -83,42 +101,42 @@ console.log("done");
    (None)
    (None)
 `;
-   const contentIdeal = `\n${version}       : AquaCrop Version
-      ${yearNumber}         : Year number of cultivation (Seeding/planting year)
-  ${startJulian}         : First day of simulation period - ${startDate.day} ${startDate.month} ${startDate.year}
-  ${endJulian}         : Last day of simulation period - ${endDate.day} ${endDate.month} ${endDate.year}
-  ${cropStartJulian}         : First day of cropping period - ${cropStartDate.day} ${cropStartDate.month} ${cropStartDate.year}
-  ${cropEndJulian}         : Last day of cropping period - ${cropEndDate.day} ${cropEndDate.month} ${cropEndDate.year}
+   const contentIdeal = `\n\t\t${version}       : AquaCrop Version
+   ${yearNumber}         : Year number of cultivation (Seeding/planting year)
+   ${startJulian}         : First day of simulation period - ${startDate.day} ${getMonthName(startDate.month)} ${startDate.year}
+   ${endJulian}         : Last day of simulation period - ${endDate.day} ${getMonthName(endDate.month)} ${endDate.year}
+   ${cropStartJulian}         : First day of cropping period - ${cropStartDate.day} ${getMonthName(cropStartDate.month)} ${cropStartDate.year}
+   ${cropEndJulian}         : Last day of cropping period - ${cropEndDate.day} ${getMonthName(cropEndDate.month)} ${cropEndDate.year}
 -- 1. Climate (CLI) file
    ${climateFile}
-   ${fs.existsSync(path.join(myData, climateFile)) ? myData : aquaData}
+   ${climateFilePath}
    1.1 Temperature (Tnx or TMP) file
    ${temperatureFile}
-   ${fs.existsSync(path.join(myData, temperatureFile)) ? myData : aquaData}
+   ${temperatureFilePath}
    1.2 Reference ET (ETo) file
    ${referenceETFile}
-   ${fs.existsSync(path.join(myData, referenceETFile)) ? myData : aquaData}
+   ${referenceETFilePath}
    1.3 Rain (PLU) file
    ${rainFile}
-   ${fs.existsSync(path.join(myData, rainFile)) ? myData : aquaData}
+   ${rainFilePath}
    1.4 Atmospheric CO2 concentration (CO2) file
    ${co2File}
-   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'SIMUL')}
+   ${myData}
 -- 2. Calendar (CAL) file
    (None)
    (None)
 -- 3. Crop (CRO) file
    ${cropFile}
-   ${fs.existsSync(path.join(myData, cropFile)) ? myData : aquaData}
+   ${cropFilePath}
 -- 4. Irrigation management (IRR) file
    ${idealIrr}
-   ${fs.existsSync(path.join(myData, idealIrr)) ? myData : aquaData}
+   ${idealIrrFilePath}
 -- 5. Field management (MAN) file
    (None)
    (None)
 -- 6. Soil profile (SOL) file
    ${soilFile}
-   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')}
+   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')}\\
 -- 7. Groundwater table (GWT) file
    (None)
    (None)
@@ -136,23 +154,20 @@ console.log("done");
    const filePathActual = path.join(__dirname, '..', 'aquacrop', 'LIST', 'tom.PRO');
    fs.writeFileSync(filePathActual, content);
    const filePathIdeal = path.join(__dirname, '..', 'aquacrop', 'LIST', 'idealPro.PRO');
-   fs.writeFileSync(filePathIdeal, content);
+   fs.writeFileSync(filePathIdeal, contentIdeal);
    console.log(`Project files created`);
 }
-export function dateToJulian(year, month, day) {
-   if (month <= 2) {
-      year -= 1;
-      month += 12;
-   }
+function dateToJulian(year, month, day) {
+   // Custom epoch start date: 1 January 1900
+   const epochYear = 1900;
+   const epochMonth = 1;
+   const epochDay = 1;
 
-   const A = Math.floor(year / 100);
-   const B = 2 - A + Math.floor(A / 4);
+   // Calculate the number of days from the epoch to the given date
+   const daysFromEpoch = (year - epochYear) * 365 + Math.floor((year - epochYear) / 4) +
+      (month - epochMonth) * 30 + day - epochDay;
 
-   const JD = Math.floor(365.25 * (year + 4716)) +
-      Math.floor(30.6001 * (month + 1)) +
-      day + B - 1524.5;
-
-   return Math.floor(JD);
+   return daysFromEpoch;
 }
 
 // Example usage
@@ -174,3 +189,7 @@ export function dateToJulian(year, month, day) {
 //     soilFile: 'SandyLoam.SOL',
 // };
 // createProjectFile(data);
+
+module.exports = {
+   createProjectFile, dateToJulian
+}

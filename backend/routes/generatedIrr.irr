@@ -1,4 +1,4 @@
-Irrigation schedule for Spinach farm(12/12/2024) 
+Irrigation schedule for Egg Plant farm(23/12/2024) 
 7.2   : AquaCrop Version(August 2024) 
 4     : Surface irrigation: Furrow
 90     : Percentage of soil surface wetted by irrigation
@@ -6,11 +6,28 @@ Irrigation schedule for Spinach farm(12/12/2024)
 
 Day    Depth(mm)   ECw(dS / m) 
 ====================================
-     1           NaN          1.5
-     8           NaN          1.5
-    15           NaN          1.5
-    22           NaN          1.5
-    29           NaN          1.5
-    36           NaN          1.5
-    43           NaN          1.5
-    50           NaN          1.5
+     1          8.31          1.5
+     8          8.31          1.5
+    15          8.31          1.5
+    22          8.31          1.5
+    29          8.31          1.5
+    36          8.31          1.5
+    43          8.31          1.5
+    50          8.31          1.5
+    57          8.31          1.5
+    64          8.31          1.5
+    71          8.31          1.5
+    78          8.31          1.5
+    85          8.31          1.5
+    92          8.31          1.5
+    99          8.31          1.5
+    106          8.31          1.5
+    113          8.31          1.5
+    120          8.31          1.5
+    127          8.31          1.5
+    134          8.31          1.5
+    141          8.31          1.5
+    148          8.31          1.5
+    155          8.31          1.5
+    162          8.31          1.5
+    169          8.31          1.5

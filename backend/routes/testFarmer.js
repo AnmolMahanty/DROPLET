@@ -24,7 +24,7 @@ async function runTest() {
         const response = await axios.post('http://localhost:5000/api/getdata', testData);
         console.log(response.data);
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
     }
 }
 
