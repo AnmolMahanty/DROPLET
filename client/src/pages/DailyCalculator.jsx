@@ -123,7 +123,6 @@ const WaterFootprintQuiz = () => {
             laundry: 0
         };
 
-        // Drinking and cooking water
         switch(answers.drinking) {
             case "Once per day":
                 waterUsage.drinking = 5;
@@ -134,14 +133,14 @@ const WaterFootprintQuiz = () => {
             case "After every meal or multiple times per day":
                 waterUsage.drinking = 15;
                 break;
+            default:
+                break;
         }
 
-        // Reduce if water is reused
         if (answers.reuse === "Yes") {
             waterUsage.drinking -= 2;
         }
 
-        // Bathing water
         switch(answers.bathing) {
             case "1 bucket":
                 waterUsage.bathing = 20;
@@ -161,14 +160,14 @@ const WaterFootprintQuiz = () => {
             case "Shower - More than 10 minutes":
                 waterUsage.bathing = 100;
                 break;
+            default:
+                break;
         }
 
-        // Adjust for water-saving fixtures
         if (answers.waterSaving === "Yes") {
-            waterUsage.bathing *= 0.8; // 20% reduction
+            waterUsage.bathing *= 0.8;
         }
 
-        // Utensil washing
         let utensilWater = 0;
         switch(answers.utensils) {
             case "Once":
@@ -180,15 +179,15 @@ const WaterFootprintQuiz = () => {
             case "After every meal":
                 utensilWater = 60;
                 break;
+            default:
+                break;
         }
 
-        // Adjust for dishwasher vs hand washing
         if (answers.washingMethod === "Dishwasher") {
-            utensilWater *= 1.2; // Dishwashers typically use more water
+            utensilWater *= 1.2;
         }
         waterUsage.cleaning += utensilWater;
 
-        // Laundry
         switch(answers.laundry) {
             case "1–2 times":
                 waterUsage.laundry = 50;
@@ -199,9 +198,10 @@ const WaterFootprintQuiz = () => {
             case "More than 5 times":
                 waterUsage.laundry = 150;
                 break;
+            default:
+                break;
         }
 
-        // Floor cleaning
         switch(answers.mopping) {
             case "Daily":
                 waterUsage.cleaning += 20;
@@ -212,9 +212,10 @@ const WaterFootprintQuiz = () => {
             case "Weekly":
                 waterUsage.cleaning += 5;
                 break;
+            default:
+                break;
         }
 
-        // Vehicle cleaning
         switch(answers.vehicle) {
             case "Yes, Daily":
                 waterUsage.cleaning += 30;
@@ -225,9 +226,10 @@ const WaterFootprintQuiz = () => {
             case "Yes, Monthly":
                 waterUsage.cleaning += 5;
                 break;
+            default:
+                break;
         }
 
-        // Outdoor cleaning
         switch(answers.outdoor) {
             case "Yes, Daily":
                 waterUsage.cleaning += 50;
@@ -237,6 +239,8 @@ const WaterFootprintQuiz = () => {
                 break;
             case "Yes, Monthly":
                 waterUsage.cleaning += 10;
+                break;
+            default:
                 break;
         }
 
@@ -279,6 +283,15 @@ const WaterFootprintQuiz = () => {
                                 </Button>
                             ))}
                         </div>
+                        {currentQuestion === flattenedQuestions.length - 1 && (
+                            <Button 
+                                className="w-full mt-6"
+                                onClick={() => setIsSubmitted(true)}
+                                disabled={Object.keys(answers).length !== flattenedQuestions.length}
+                            >
+                                Calculate Water Footprint
+                            </Button>
+                        )}
                     </div>
                 </CardContent>
             </Card>
@@ -289,31 +302,23 @@ const WaterFootprintQuiz = () => {
         const results = calculateWaterUsage();
         
         return (
-            <div className="space-y-6">
+            <div className="container mx-auto max-w-4xl">
                 <Card>
-                    <CardHeader>
+                    <CardHeader className="text-center">
                         <CardTitle>Your Water Footprint Results</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
+                        <div className="grid grid-cols-2 gap-4 mb-8">
+                            <div className="text-center">
                                 <p className="text-sm text-muted-foreground">Daily Usage Per Person</p>
                                 <h3 className="text-2xl font-bold">{results.perPerson} Liters</h3>
                             </div>
-                            <div>
+                            <div className="text-center">
                                 <p className="text-sm text-muted-foreground">Total Household Daily Usage</p>
                                 <h3 className="text-2xl font-bold">{results.totalHousehold} Liters</h3>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Usage Breakdown</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-[300px]">
+                        <div className="h-[400px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={results.chartData}>
                                     <CartesianGrid strokeDasharray="3 3" />
@@ -356,27 +361,27 @@ const WaterFootprintQuiz = () => {
                             </div>
                         </div>
                     ))}
-                    
-                    <Button 
-                        className="w-full mt-4"
-                        onClick={() => setIsSubmitted(true)}
-                        disabled={Object.keys(answers).length !== flattenedQuestions.length}
-                    >
-                        Calculate Water Footprint
-                    </Button>
                 </div>
             </ScrollArea>
         );
     };
 
     return (
-        <div className="container mx-auto h-screen flex">
-            <div className="w-2/3 p-6">
-                {!isSubmitted ? renderCurrentQuestion() : renderResults()}
-            </div>
-            <div className="w-1/3 border-l bg-gray-50">
-                {!isSubmitted && renderNavigation()}
-            </div>
+        <div className="h-screen">
+            {!isSubmitted ? (
+                <div className="h-full flex">
+                    <div className="w-2/3 p-6">
+                        {renderCurrentQuestion()}
+                    </div>
+                    <div className="w-1/3 border-l bg-gray-50">
+                        {renderNavigation()}
+                    </div>
+                </div>
+            ) : (
+                <div className="p-6 flex justify-center items-start">
+                    {renderResults()}
+                </div>
+            )}
         </div>
     );
 };
