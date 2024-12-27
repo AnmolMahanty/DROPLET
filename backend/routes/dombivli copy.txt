@@ -1,5 +1,0 @@
-dombivli, India 1Jan2023-1Dec2024 - Data by Open Meteo API 3.0   : AquaCrop Version (January 2009)
-dombivli.Tnx
-dombivli.ETO
-dombivli.PLU
-MaunaLoa.CO2

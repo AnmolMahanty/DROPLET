@@ -21,7 +21,7 @@ const FarmerCalculator = () => {
         .split(',')
         .map(coord => coord.trim().split(' ')[0]);
       console.log(latitude, longitude);
-      await axios.post('http://localhost:5000/api/getData', { lat: latitude, long: longitude })
+      await axios.post('http://140.245.22.129:3000/api/getData', { lat: latitude, long: longitude })
         .then(response => {
           // setQuestionnaire(response.data);
 

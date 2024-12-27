@@ -7,6 +7,7 @@ const fs = require('fs').promises;
 const irrGen = require('../routes/irrigationGenerator');
 const { createProjectFile } = require('./createPro');
 const { time } = require('console');
+const os = require('os');
 
 
 // {
@@ -80,8 +81,8 @@ const cityLatLong = {
   "Bhubaneswar": { latitude: 20.2961, longitude: 85.8245 }
 };
 
-router.get('/testIrri',async(req,res)=>{
-  const userInputs =  {
+router.get('/testIrri', async (req, res) => {
+  const userInputs = {
     0: "Cabbage",
     1: "Mumbai",
     2: "2023-01-10",
@@ -94,18 +95,18 @@ router.get('/testIrri',async(req,res)=>{
     9: "Every 3 Days",
     10: "Every 2 Days",
     11: "Once a Week"
-}
+  }
 
-      try {
-          const result = await irrGen.generateIrrigationSchedule(userInputs);
-          console.log(result.message);
-          console.log("File Path:", result.filePath);
-          console.log("Irrigation Details:", result.irrigationDetails);
-      } catch (error) {
-          console.error("Error:", error.message);
-      }
-      
-  
+  try {
+    const result = await irrGen.generateIrrigationSchedule(userInputs);
+    console.log(result.message);
+    console.log("File Path:", result.filePath);
+    console.log("Irrigation Details:", result.irrigationDetails);
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+
+
 
 });
 
@@ -123,7 +124,7 @@ router.post('/getData', async (req, res) => {
     const today = new Date();
     const maxAllowedDateCal = today.getTime() - 1000 * 60 * 60 * 24;
     const maxAllowedDate = new Date(maxAllowedDateCal).toISOString().split('T')[0];
-    
+
     // Ensure endDate does not exceed the maximum allowed date
     if (endDate > maxAllowedDate) {
       endDate = maxAllowedDate;
@@ -131,7 +132,22 @@ router.post('/getData', async (req, res) => {
 
     const { latitude, longitude } = cityLatLong[location];
 
-    const climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log("myerror1: " + err.message); });
+
+    let climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`, { timeout: 20000 }).catch(err => {
+      console.log(err.message);
+    });
+    let retryCount = 0;
+    while (!climateData && retryCount < 20) {
+      console.log('Retrying request');
+      climateData = await axios.get(`https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min,rain_sum,et0_fao_evapotranspiration&timezone=auto`).catch(err => { console.log(err.message); });
+      retryCount++;
+    }
+    if (!climateData && retryCount >= 20) {
+      console.log('Failed to fetch climate data');
+      return res.status(500).send('Failed to fetch climate data');
+    }
+
+
     //const cityLatLong = {
     // "Mumbai": { latitude: 19.0760, longitude: 72.8777 },
     // "Delhi": { latitude: 28.7041, longitude: 77.1025 },
@@ -142,18 +158,18 @@ router.post('/getData', async (req, res) => {
     console.log(climateData.status);
     const data = climateData.data;
 
-    let totalDays= 0;
+    let totalDays = 0;
     await irrGen.generateIrrigationSchedule(jsonData.answers)
-    .then(result => {
-      console.log(result.message);
-      // console.log("File Path:", result.filePath);
-      // console.log("Irrigation Details:", result.irrigationDetails);
-      totalDays = result.totalDays;
-    })
+      .then(result => {
+        console.log(result.message);
+        // console.log("File Path:", result.filePath);
+        // console.log("Irrigation Details:", result.irrigationDetails);
+        totalDays = result.totalDays;
+      })
     console.log("Total Days: ", totalDays);
     const startDay = new Date(startDate).getDate();
     const startMonth = new Date(startDate).getMonth() + 1;
-    const endDateCrop =  Date.parse(startDate) + 1000 * 60 * 60 * 24 * totalDays;
+    const endDateCrop = Date.parse(startDate) + 1000 * 60 * 60 * 24 * totalDays;
     const endDay = new Date(endDateCrop).getDate();
     const endMonth = new Date(endDateCrop).getMonth() + 1;
 
@@ -165,7 +181,7 @@ router.post('/getData', async (req, res) => {
 
     // Define file paths
     const cliFilePath = path.join(__dirname, 'dombivli.CLI');
-    const pluFilePath = path.join(__dirname, 'dombivli.Plu');
+    const pluFilePath = path.join(__dirname, 'dombivli.PLU');
     const tmpFilePath = path.join(__dirname, 'dombivli.TMP');
     const etoFilePath = path.join(__dirname, 'dombivli.ETo');
 
@@ -174,7 +190,7 @@ router.post('/getData', async (req, res) => {
  3.0   : AquaCrop Version (January 2009)
 dombivli.TMP\r
 dombivli.ETo\r
-dombivli.Plu\r
+dombivli.PLU\r
 MaunaLoa.CO2\r`;
     fs.writeFile(cliFilePath, cliContent);
 
@@ -221,8 +237,8 @@ ${et0.join('\r\n')}\r\n`;
     // console.log(cropName.trim().replace(" ", "_"));
     // Define the source and destination paths
     try {
-      const sourcePath = path.join(__dirname, '..', 'aquacrop', 'Crops', `${cropName.trim().replace(" ", "_")}.cro`);
-      const destinationPath = path.join(__dirname, `selectedCrop.cro`);
+      const sourcePath = path.join(__dirname, '..', 'aquacrop', 'Crops', `${cropName.trim().replace(" ", "_")}.CRO`);
+      const destinationPath = path.join(__dirname, `selectedCrop.CRO`);
 
       // Copy the .cro file from the crop folder to the current folder
       await fs.copyFile(sourcePath, destinationPath);
@@ -230,7 +246,7 @@ ${et0.join('\r\n')}\r\n`;
     catch (err) {
       console.log("myerror3: " + err.message);
     }
-    console.log(`Copied ${cropName}.cro to the current folder`);
+    console.log(`Copied ${cropName}.CRO to the current folder`);
     const proData = {
       version: '7.2',
       yearNumber: 1,
@@ -241,7 +257,7 @@ ${et0.join('\r\n')}\r\n`;
       climateFile: 'dombivli.CLI',
       temperatureFile: 'dombivli.TMP',
       referenceETFile: 'dombivli.ETo',
-      rainFile: 'dombivli.Plu',
+      rainFile: 'dombivli.PLU',
       co2File: 'MaunaLoa.CO2',
       cropFile: 'selectedCrop.CRO',
       irrigationFile: 'generatedIrr.IRR',
@@ -253,7 +269,7 @@ ${et0.join('\r\n')}\r\n`;
 
     console.log('Files written successfully');
     try {
-      var executeResponse = await axios.post('http://localhost:5000/api/execute', { cropName: cropName, location: location, startDate: startDate });
+      var executeResponse = await axios.post('http://140.245.22.129:3000/api/execute', { cropName: cropName, location: location, startDate: startDate });
       res.status(executeResponse.status).send(executeResponse.data);
     }
     catch (err) {
@@ -271,10 +287,10 @@ ${et0.join('\r\n')}\r\n`;
 
 
 router.post('/execute', async (req, res) => {
-  // axios.post('http://localhost:5000/api/getData').then{
+  // axios.post('http://140.245.22.129:3000/api/getData').then{
 
   console.log('Executing model');
-  const exePath = path.join(__dirname, '..', 'aquacrop', 'aquacrop.exe');
+  let exePath;
   const workingDirectory = path.join(__dirname, '..', 'aquacrop');
   const actualFootprintFile = path.join(__dirname, '..', 'aquacrop', 'OUTP', 'tomPROday.OUT');
   const ideaFootprintFile = path.join(__dirname, '..', 'aquacrop', 'OUTP', 'idealProPROday.OUT');
@@ -283,7 +299,14 @@ router.post('/execute', async (req, res) => {
   const actualIrrigationFile = path.join(__dirname, '..', 'aquacrop', 'OUTP', 'tomPROirrInfo.OUT');
   const idealIrrigationFile = path.join(__dirname, '..', 'aquacrop', 'OUTP', 'idealProPROirrInfo.OUT');
 
+  if (os.arch() === 'arm64') {
+    exePath = path.join(__dirname, '..', 'aquacrop', 'aquacrop');
+    console.log('executing on arm64');
 
+  } else {
+    exePath = path.join(__dirname, '..', 'aquacrop', 'aquacrop.exe');
+    console.log('executing on windows');
+  }
   // Check if the executable file exists
   try {
     await fs.access(exePath);
@@ -376,8 +399,8 @@ router.post('/execute', async (req, res) => {
       }
       console.log("irrigation table written successfully");
       // console.log(resultJson);
-      res.json( resultJson);
-      await axios.post('http://localhost:5000/database/storeCropData', {
+      res.json(resultJson);
+      await axios.post('http://140.245.22.129:3000/database/storeCropData', {
         cropName: req.body.cropName,
         location: req.body.location,
         startDate: req.body.startDate,
@@ -385,12 +408,12 @@ router.post('/execute', async (req, res) => {
         timestamp: Date.now()
       }).then(res => { console.log(res.data); }).catch(err => { console.log(err.message); });
 
-      
+
     } catch (err) {
       console.error(`Error reading output file: ${err}`);
       return res.status(500).json({ error: 'Failed to read output file' });
     }
-   
+
 
   });
   // }

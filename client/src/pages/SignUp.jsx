@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import video from "../assets/signin-video.mp4";
+import dropletLogo from "../assets/droplet-logo.svg";
+import googleLogo from "../assets/google.svg";
 import axios from 'axios';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { initializeApp } from "firebase/app";
@@ -26,7 +28,7 @@ const SignUp = () => {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      const response = await axios.post('http://localhost:5000/auth/signin', { idToken });
+      const response = await axios.post('http://140.245.22.129:3000/auth/signin', { idToken });
       const { customToken } = response.data;
       console.log('Custom Token:', customToken);
       if (response.status === 200) {
@@ -49,7 +51,7 @@ const SignUp = () => {
             <div className="flex flex-col items-center justify-center">
               <div className="flex items-center gap-2 cursor-pointer">
                 <img
-                  src="\src\assets\droplet-logo.svg"
+                  src={dropletLogo}
                   alt="droplet-logo"
                   className="w-8 sm:w-12"
                 />
@@ -67,7 +69,7 @@ const SignUp = () => {
                   className="w-full flex items-center justify-center space-x-3 py-2.5 sm:py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   <img
-                    src="src/assets/google.svg"
+                    src={googleLogo}
                     alt="google-logo"
                     className="w-4 h-4 sm:w-5 sm:h-5"
                   />

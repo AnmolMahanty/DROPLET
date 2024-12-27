@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import droplet_video from "../assets/droplet_video.mp4";
+import droplet_video from "../assets/Droplet_video.mp4";
 import Assistant from "../components/Assistant";
 import { useNavigate } from "react-router-dom";
 import about from "../assets/about.jpg";

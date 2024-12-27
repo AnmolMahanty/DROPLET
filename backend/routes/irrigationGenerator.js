@@ -77,7 +77,7 @@ async function generateIrrigationSchedule(jsonData) {
   const pipeArea = calculatePipeArea(pipeDiameter);
   const waterVelocity = calculateWaterVelocity(motorHorsepower, pipeDiameter);
   const flowRate = calculateFlowRate(pipeArea, waterVelocity);
-  console.log("Flow rate (liters/second):", flowRate);
+  // console.log("Flow rate (liters/second):", flowRate);
   
   // Generate the irrigation schedule
   const irrigationSchedule = [];
@@ -87,9 +87,9 @@ async function generateIrrigationSchedule(jsonData) {
       if (day % frequency === 0) {
         const sessionVolumeLiters = flowRate * irrigationHoursPerSession; // Convert hours to seconds
         
-        console.log("Session volume (liters):", sessionVolumeLiters);
+        // console.log("Session volume (liters):", sessionVolumeLiters);
         const sessionDepthMm = (sessionVolumeLiters / farmArea) * 10; // Depth in mm
-        console.log("Session depth (mm):", sessionDepthMm);
+        // console.log("Session depth (mm):", sessionDepthMm);
         irrigationSchedule.push({
           day: currentDay,
           depth: parseFloat(sessionDepthMm.toFixed(2)),
@@ -116,7 +116,7 @@ async function generateIrrigationSchedule(jsonData) {
     irrFileContent += `    ${entry.day.toString().padStart(2)}        ${entry.depth.toString().padStart(6)}          ${entry.ecw.toFixed(1)}\n`;
   });
   // Save to .irr file
-  const outputPath = path.join(__dirname, `generatedIrr.irr`);
+  const outputPath = path.join(__dirname, `generatedIrr.IRR`);
   fs.writeFileSync(outputPath, irrFileContent);
   return {
     message: "Irrigation schedule generated successfully.",

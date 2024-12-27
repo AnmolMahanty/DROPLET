@@ -3,11 +3,14 @@ const cors = require('cors');
 const dwfRoutes = require('./routes/DWF');
 const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
+const path = require('path');
 const app = express();
-const port = 5000;
+const port = 3000;
+
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '..','client' ,'dist')));
 
 app.use('/dwf',dwfRoutes);
 app.use('/api',apiRoutes);

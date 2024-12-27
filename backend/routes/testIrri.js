@@ -19,7 +19,7 @@ const userInputs = {
 async function runTest()
 {
     try {
-        const result = await axios.get("http://localhost:5000/api/testIrri");
+        const result = await axios.get("http://140.245.22.129:3000/api/testIrri");
         console.log(result.message);
         console.log("File Path:", result.filePath);
         console.log("Irrigation Details:", result.irrigationDetails);

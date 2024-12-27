@@ -105,7 +105,7 @@ router.post('/getData', async (req, res) => {
 
     // Define file paths
     const cliFilePath = path.join(__dirname, 'dombivli.CLI');
-    const pluFilePath = path.join(__dirname, 'dombivli.Plu');
+    const pluFilePath = path.join(__dirname, 'dombivli.PLU');
     const tmpFilePath = path.join(__dirname, 'domdbivli.TMP');
     const etoFilePath = path.join(__dirname, 'dombivli.ETo');
 
@@ -114,7 +114,7 @@ router.post('/getData', async (req, res) => {
  3.0   : AquaCrop Version (January 2009)
 domdbivli.TMP\r
 dombivli.ETo\r
-dombivli.Plu\r
+dombivli.PLU\r
 MaunaLoa.CO2\r`;
     fs.writeFile(cliFilePath, cliContent);
 
@@ -180,7 +180,7 @@ ${et0.join('\r\n')}\r\n`;
       climateFile: 'dombivli.CLI',
       temperatureFile: 'domdbivli.TMP',
       referenceETFile: 'dombivli.ETo',
-      rainFile: 'dombivli.Plu',
+      rainFile: 'dombivli.PLU',
       co2File: 'MaunaLoa.CO2',
       cropFile: 'selectedCrop.CRO',
       irrigationFile: 'generatedIrr.IRR',
@@ -192,7 +192,7 @@ ${et0.join('\r\n')}\r\n`;
 
     console.log('Files written successfully');
     try {
-      var executeResponse = await axios.post('http://localhost:5000/api/execute');
+      var executeResponse = await axios.post('http://140.245.22.129:3000/api/execute');
       res.status(executeResponse.status).send(executeResponse.data);
     }
     catch (err) {
@@ -210,7 +210,7 @@ ${et0.join('\r\n')}\r\n`;
 
 
 router.post('/execute', async (req, res) => {
-  // axios.post('http://localhost:5000/api/getData').then{
+  // axios.post('http://140.245.22.129:3000/api/getData').then{
 
   console.log('Executing model');
   const exePath = path.join(__dirname, '..', 'aquacrop', 'aquacrop.exe');

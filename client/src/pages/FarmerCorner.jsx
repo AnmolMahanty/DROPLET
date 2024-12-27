@@ -244,7 +244,7 @@ const DailyCalculator = () => {
 
   const sendToServer = async (payload) => {
     await axios
-      .post("http://localhost:5000/api/getData", payload)
+      .post("http://140.245.22.129:3000/api/getData", payload)
       .then((response) => {
         console.log(response.data);
         navigate("/dashboard/farmerResult", { state: response.data });

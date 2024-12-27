@@ -15,7 +15,7 @@
    dombivli.eto
    C:\sarthak\DROPLET\backend\routes\
    1.3 Rain (PLU) file
-   dombivli.plu
+   dombivli.PLU
    C:\sarthak\DROPLET\backend\routes\
    1.4 Atmospheric CO2 concentration (CO2) file
    MaunaLoa.CO2

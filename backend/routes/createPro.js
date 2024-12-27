@@ -42,8 +42,8 @@ function createProjectFile(data) {
    const endJulian = dateToJulian(endDate.year, endDate.month, endDate.day);
    const cropStartJulian = dateToJulian(cropStartDate.year, cropStartDate.month, cropStartDate.day);
    const cropEndJulian = dateToJulian(cropEndDate.year, cropEndDate.month, cropEndDate.day);
-   const aquaData = path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')+'\\';
-   const myData = path.join(__dirname)+'\\';
+   const aquaData = path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')+path.sep;
+   const myData = path.join(__dirname)+path.sep;
    const climateFilePath = checkFileExists(myData, climateFile) || aquaData;
    const temperatureFilePath = checkFileExists(myData, temperatureFile) || aquaData;
    const referenceETFilePath = checkFileExists(myData, referenceETFile) || aquaData;
@@ -60,34 +60,34 @@ function createProjectFile(data) {
    ${cropEndJulian}         : Last day of cropping period - ${cropEndDate.day} ${getMonthName(cropEndDate.month)} ${cropEndDate.year}
 -- 1. Climate (CLI) file
    ${climateFile}
-   ${myData}
+   '${myData}'
    1.1 Temperature (Tnx or TMP) file
    ${temperatureFile}
-   ${myData}
+   '${myData}'
    1.2 Reference ET (ETo) file
    ${referenceETFile}
-   ${myData}
+   '${myData}'
    1.3 Rain (PLU) file
    ${rainFile}
-   ${myData}
+   '${myData}'
    1.4 Atmospheric CO2 concentration (CO2) file
    ${co2File}
-   ${myData}
+   '${myData}'
 -- 2. Calendar (CAL) file
    (None)
    (None)
 -- 3. Crop (CRO) file
    ${cropFile}
-   ${myData}
+   '${myData}'
 -- 4. Irrigation management (IRR) file
    ${irrigationFile}
-   ${myData}
+   '${myData}'
 -- 5. Field management (MAN) file
    (None)
    (None)
 -- 6. Soil profile (SOL) file
    ${soilFile}
-   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')}\\
+   '${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')+path.sep}'
 -- 7. Groundwater table (GWT) file
    (None)
    (None)
@@ -109,34 +109,34 @@ function createProjectFile(data) {
    ${cropEndJulian}         : Last day of cropping period - ${cropEndDate.day} ${getMonthName(cropEndDate.month)} ${cropEndDate.year}
 -- 1. Climate (CLI) file
    ${climateFile}
-   ${climateFilePath}
+   '${climateFilePath}'
    1.1 Temperature (Tnx or TMP) file
    ${temperatureFile}
-   ${temperatureFilePath}
+   '${temperatureFilePath}'
    1.2 Reference ET (ETo) file
    ${referenceETFile}
-   ${referenceETFilePath}
+   '${referenceETFilePath}'
    1.3 Rain (PLU) file
    ${rainFile}
-   ${rainFilePath}
+   '${rainFilePath}'
    1.4 Atmospheric CO2 concentration (CO2) file
    ${co2File}
-   ${myData}
+   '${myData}'
 -- 2. Calendar (CAL) file
    (None)
    (None)
 -- 3. Crop (CRO) file
    ${cropFile}
-   ${cropFilePath}
+   '${cropFilePath}'
 -- 4. Irrigation management (IRR) file
    ${idealIrr}
-   ${idealIrrFilePath}
+   '${idealIrrFilePath}'
 -- 5. Field management (MAN) file
    (None)
    (None)
 -- 6. Soil profile (SOL) file
    ${soilFile}
-   ${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')}\\
+   '${path.join(__dirname, '..', 'aquacrop', 'AquaCropV72No02092024', 'DATA')+path.sep}'
 -- 7. Groundwater table (GWT) file
    (None)
    (None)

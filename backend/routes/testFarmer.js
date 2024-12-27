@@ -20,7 +20,7 @@ const axios = require('axios');
 
 async function runTest() {
     try {
-        const response = await axios.post('http://localhost:5000/api/getdata', testData);
+        const response = await axios.post('http://140.245.22.129:3000/api/getdata', testData);
         console.log(response.data);
     } catch (error) {
         console.error(error.message);

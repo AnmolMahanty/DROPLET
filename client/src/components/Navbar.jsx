@@ -1,4 +1,6 @@
 import React from "react";
+import dropletLogo from "../assets/droplet-logo.svg";
+import languageSvc from "../assets/language.svg";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -17,14 +19,14 @@ const Navbar = () => {
         onClick={handleHomeClick}
         className="flex items-center gap-2 cursor-pointer"
       >
-        <img src="\src\assets\droplet-logo.svg" alt="droplet-logo" width={26} />
+        <img src={dropletLogo} alt="droplet-logo" width={26} />
         <p className="text-xl font-medium">Droplet</p>
       </div>
 
       <div className="flex items-center gap-6">
         <div className="bg-gray-200 p-2 rounded-[100%]">
           <img
-            src="\src\assets\language.svg"
+            src={languageSvc}
             alt="language-selection-icon"
             width={18}
           />
