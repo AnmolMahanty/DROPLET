@@ -5,8 +5,8 @@ Default Tomato, Calendar (Cordoba, 1May86)
      0         : Crop is transplanted
      1         : Determination of crop cycle : by calendar days
      1         : Soil water depletion factors (p) are adjusted by ETo
-     7.0       : Base temperature (°C) below which crop development does not progress
-    28.0       : Upper temperature (°C) above which crop development no longer increases with an increase in temperature
+     7.0       : Base temperature (ï¿½C) below which crop development does not progress
+    28.0       : Upper temperature (ï¿½C) above which crop development no longer increases with an increase in temperature
     -9         : Total length of crop cycle in growing degree-days
      0.15      : Soil water depletion factor for canopy expansion (p-exp) - Upper threshold
      0.55      : Soil water depletion factor for canopy expansion (p-exp) - Lower threshold
@@ -24,8 +24,8 @@ Default Tomato, Calendar (Cordoba, 1May86)
     25.00      : Response of crop Water Productivity is not considered
     25.00      : Response of decline of canopy cover is not considered
     -9         : dummy - Parameter no Longer required
-    10         : Minimum air temperature below which pollination starts to fail (cold stress) (°C)
-    40         : Maximum air temperature above which pollination starts to fail (heat stress) (°C)
+    10         : Minimum air temperature below which pollination starts to fail (cold stress) (ï¿½C)
+    40         : Maximum air temperature above which pollination starts to fail (heat stress) (ï¿½C)
     -9.0       : Cold (air temperature) stress on crop transpiration not considered
      2         : Electrical Conductivity of soil saturation extract at which crop starts to be affected by soil salinity (dS/m)
     15         : Electrical Conductivity of soil saturation extract at which crop can no longer grow (dS/m)
