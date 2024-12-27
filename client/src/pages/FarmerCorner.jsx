@@ -22,13 +22,82 @@ const DailyCalculator = () => {
             {
               question: "Enter the crop name?",
               inputType: "dropdown",
-              options: ["Broccoli", "Brussel Sprouts", "Cabbage", "Carrots", "Cauliflower", "Celery", "Garlic", "Lettuce", "Spinach", "Radish", "Egg Plant", "Sweet Peppers (bell)", "Sweet Potato", "Chick pea", "Beans, green", "Beans, dry and Pulses", "Cacao", "Kiwi", "Date Palms", "Coffee"],
+              options: [
+                "Broccoli",
+                "Brussel Sprouts",
+                "Cabbage",
+                "Carrots",
+                "Cauliflower",
+                "Celery",
+                "Garlic",
+                "Lettuce",
+                "Spinach",
+                "Radish",
+                "Egg Plant",
+                "Sweet Peppers (bell)",
+                "Sweet Potato",
+                "Chick pea",
+                "Beans, green",
+                "Beans, dry and Pulses",
+                "Cacao",
+                "Kiwi",
+                "Date Palms",
+                "Coffee",
+              ],
             },
             {
               question: "Select your location?",
               inputType: "dropdown",
               options: [
-                "Delhi", "Mumbai", "Lucknow", "Bhopal", "Chennai", "Hyderabad", "Bangalore", "Ahmedabad", "Kolkata", "Pune", "Jaipur", "Patna", "Raipur", "Nagpur", "Surat", "Coimbatore", "Chandigarh", "Guwahati", "Indore", "Ludhiana", "Amritsar", "Vijayawada", "Varanasi", "Kanpur", "Mysore", "Thiruvananthapuram", "Ranchi", "Jodhpur", "Allahabad", "Madurai", "Vellore", "Dharwad", "Puducherry", "Kozhikode", "Jamshedpur", "Dehradun", "Shimla", "Shillong", "Cuttack", "Dibrugarh", "Agartala", "Panaji", "Imphal", "Aizawl", "Itanagar", "Gangtok", "Silchar", "Udaipur", "Bhubaneswar"
+                "Delhi",
+                "Mumbai",
+                "Lucknow",
+                "Bhopal",
+                "Chennai",
+                "Hyderabad",
+                "Bangalore",
+                "Ahmedabad",
+                "Kolkata",
+                "Pune",
+                "Jaipur",
+                "Patna",
+                "Raipur",
+                "Nagpur",
+                "Surat",
+                "Coimbatore",
+                "Chandigarh",
+                "Guwahati",
+                "Indore",
+                "Ludhiana",
+                "Amritsar",
+                "Vijayawada",
+                "Varanasi",
+                "Kanpur",
+                "Mysore",
+                "Thiruvananthapuram",
+                "Ranchi",
+                "Jodhpur",
+                "Allahabad",
+                "Madurai",
+                "Vellore",
+                "Dharwad",
+                "Puducherry",
+                "Kozhikode",
+                "Jamshedpur",
+                "Dehradun",
+                "Shimla",
+                "Shillong",
+                "Cuttack",
+                "Dibrugarh",
+                "Agartala",
+                "Panaji",
+                "Imphal",
+                "Aizawl",
+                "Itanagar",
+                "Gangtok",
+                "Silchar",
+                "Udaipur",
+                "Bhubaneswar",
               ],
             },
             {
@@ -56,7 +125,8 @@ const DailyCalculator = () => {
               constraints: { min: 0, max: 50 },
             },
             {
-              question: "What is the diameter of the pipe used for irrigation?(inches)",
+              question:
+                "What is the diameter of the pipe used for irrigation?(inches)",
               inputType: "number",
               constraints: { min: 0, max: 10 },
             },
@@ -77,17 +147,20 @@ const DailyCalculator = () => {
               constraints: { min: 0, max: 7 },
             },
             {
-              question: "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
+              question:
+                "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
             {
-              question: "What is the usual time interval between irrigation sessions during each crop growth phase?",
+              question:
+                "What is the usual time interval between irrigation sessions during each crop growth phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
             {
-              question: "What is the usual time interval between irrigation sessions during each crop maturity phase?",
+              question:
+                "What is the usual time interval between irrigation sessions during each crop maturity phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
@@ -101,7 +174,10 @@ const DailyCalculator = () => {
   }, []);
 
   const questions = useMemo(
-    () => questionnaire ? questionnaire.sections.flatMap((section) => section.questions) : [],
+    () =>
+      questionnaire
+        ? questionnaire.sections.flatMap((section) => section.questions)
+        : [],
     [questionnaire]
   );
 
@@ -133,7 +209,9 @@ const DailyCalculator = () => {
       if (currentQuestion.constraints) {
         const { min, max } = currentQuestion.constraints;
         if (answer < min || answer > max) {
-          setErrorMessage(`Invalid input: Please enter a value between ${min} and ${max}.`);
+          setErrorMessage(
+            `Invalid input: Please enter a value between ${min} and ${max}.`
+          );
           return;
         }
       }
@@ -150,7 +228,9 @@ const DailyCalculator = () => {
     const unansweredQuestions = questions.some((_, index) => !answers[index]);
 
     if (unansweredQuestions) {
-      setErrorMessage("All questions are compulsory. Please complete the questionnaire.");
+      setErrorMessage(
+        "All questions are compulsory. Please complete the questionnaire."
+      );
       return;
     }
 
@@ -162,14 +242,18 @@ const DailyCalculator = () => {
     console.log("Payload to be submitted:", payload);
     sendToServer(payload);
 
-    setCalculationResult({ message: "Data submission simulated successfully!" });
+    setCalculationResult({
+      message: "Data submission simulated successfully!",
+    });
   }, [answers, questions]);
 
   const sendToServer = async (payload) => {
-    await axios.post("http://localhost:5000/api/getData", payload).then(response => {
-      console.log(response.data);
-      navigate("/dashboard/farmerResult", { state: response.data });
-    });
+    await axios
+      .post("http://localhost:5000/api/getData", payload)
+      .then((response) => {
+        console.log(response.data);
+        navigate("/dashboard/farmerResult", { state: response.data });
+      });
   };
 
   if (isLoading) {
@@ -188,8 +272,12 @@ const DailyCalculator = () => {
     return (
       <div className="flex items-center justify-center min-h-screen bg-blue-50 px-4">
         <div className="bg-white shadow-lg rounded-lg p-4 md:p-8 w-full max-w-lg">
-          <h2 className="text-xl md:text-2xl font-bold mb-4">Submission Successful!</h2>
-          <p className="text-lg md:text-xl mb-4">Thank you for your submission.</p>
+          <h2 className="text-xl md:text-2xl font-bold mb-4">
+            Submission Successful!
+          </h2>
+          <p className="text-lg md:text-xl mb-4">
+            Thank you for your submission.
+          </p>
           <button
             onClick={() => setCalculationResult(null)}
             className="bg-blue-500 text-white py-2 px-4 rounded w-full md:w-auto"
@@ -212,7 +300,9 @@ const DailyCalculator = () => {
         <p className="mb-4 text-sm md:text-base">{currentQuestion.question}</p>
 
         {errorMessage && (
-          <p className="text-red-500 mb-4 text-sm md:text-base">{errorMessage}</p>
+          <p className="text-red-500 mb-4 text-sm md:text-base">
+            {errorMessage}
+          </p>
         )}
 
         <AnimatePresence mode="wait">
@@ -230,7 +320,9 @@ const DailyCalculator = () => {
               onChange={(e) => handleAnswerChange(e.target.value)}
               className="w-full p-2 md:p-3 border rounded-lg mb-4 text-sm md:text-base"
             >
-              <option value="" disabled>Select an option</option>
+              <option value="" disabled>
+                Select an option
+              </option>
               {currentQuestion.options.map((option, index) => (
                 <option key={index} value={option}>
                   {option}

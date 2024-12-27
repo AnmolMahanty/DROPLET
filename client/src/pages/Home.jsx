@@ -1,262 +1,296 @@
-import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { Droplet, Utensils, Camera, Tractor, ChevronRight } from "lucide-react";
-import { motion, useAnimation } from "framer-motion";
-import Chatbot from "@/components/Chatbot";
+import { useRef } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import droplet_video from "../assets/droplet_video.mp4";
+import Assistant from "../components/Assistant";
+import { useNavigate } from "react-router-dom";
+import about from "../assets/about.jpg";
+import Feature1 from "../assets/Feature1.png";
+import Feature2 from "../assets/Feature2.png";
+import Feature3 from "../assets/Feature3.png";
 
-const FeatureCard = ({ icon, title, description }) => (
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    className="bg-white rounded-lg p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow"
-  >
-    <motion.div
-      whileHover={{ rotate: 360 }}
-      transition={{ duration: 0.5 }}
-      className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full mb-3 sm:mb-4"
-    >
-      {icon}
-    </motion.div>
-    <h3 className="text-lg sm:text-xl font-semibold mb-2 text-blue-900">{title}</h3>
-    <p className="text-sm sm:text-base text-blue-700">{description}</p>
-  </motion.div>
-);
+const Home = () => {
+  const aboutRef = useRef(null);
 
-const WaterUsageTip = ({ usage }) => {
-  const tips = [
-    { threshold: 100, text: "Great job! You're using water efficiently." },
+  const navigate = useNavigate();
+
+  const handleSignInClick = () => {
+    navigate("/signin");
+  };
+  const handleIndustryClick = () => {
+    navigate("/landing");
+  };
+  const features = [
     {
-      threshold: 200,
-      text: "You're doing well, but there's room for improvement.",
+      title: "Farmer's Corner",
+      description:
+        "Connect with local farmers, learn sustainable practices, and support your community's agriculture.",
+      image: Feature1,
     },
-    { threshold: 300, text: "Consider ways to reduce your water usage." },
     {
-      threshold: Infinity,
-      text: "Your water usage is high. Let's find ways to conserve!",
+      title: "Food Calculator",
+      description:
+        "Calculate the environmental impact of your meals and discover eco-friendly alternatives.",
+      image: Feature2,
+    },
+    {
+      title: "Daily Footprint",
+      description:
+        "Track your daily carbon footprint and get personalized tips to reduce your environmental impact.",
+      image: Feature3,
     },
   ];
 
-  const currentTip = tips.find((tip) => usage <= tip.threshold);
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mt-4 p-3 sm:p-4 bg-blue-100 rounded-lg text-blue-800"
-    >
-      <h4 className="text-sm sm:text-base font-semibold mb-2">Water Usage Tip:</h4>
-      <p className="text-sm sm:text-base">{currentTip.text}</p>
-    </motion.div>
-  );
-};
-
-const Home = () => {
-  const [waterUsage, setWaterUsage] = useState(150);
-  const waterLevelAnimation = useAnimation();
-
-  const handleSliderChange = (e) => {
-    setWaterUsage(parseInt(e.target.value));
-  };
-
-  useEffect(() => {
-    waterLevelAnimation.start({
-      height: `${(waterUsage / 300) * 100}%`,
-      transition: { type: "spring", stiffness: 100 },
-    });
-  }, [waterUsage, waterLevelAnimation]);
-
-  return (
-    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      <Navbar />
-      <div className="pt-16 sm:pt-20">
-        {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-80px)] text-center px-4 sm:px-6">
-          <motion.h1
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl sm:text-4xl md:text-6xl font-bold text-blue-900 mb-4 sm:mb-6"
-          >
-            Visualize Your Water Footprint
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg sm:text-xl text-blue-700 mb-6 sm:mb-8 max-w-2xl px-4"
-          >
-            Discover the impact of your daily water usage and learn how to
-            conserve this precious resource.
-          </motion.p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-blue-600 text-white font-semibold py-2.5 sm:py-3 px-6 sm:px-8 rounded-full text-base sm:text-lg hover:bg-blue-700 transition-colors"
-          >
-            Calculate Your Footprint
-          </motion.button>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-8 sm:mt-12 w-full max-w-md px-4"
-          >
-            <h3 className="text-blue-900 text-lg sm:text-xl mb-3 sm:mb-4">
-              Daily Water Usage: {waterUsage} Liters
-            </h3>
-            <input
-              type="range"
-              min="0"
-              max="300"
-              value={waterUsage}
-              onChange={handleSliderChange}
-              className="w-full"
-            />
-            <div className="relative h-48 sm:h-64 mt-4 bg-blue-200 rounded-lg overflow-hidden">
-              <motion.div
-                animate={waterLevelAnimation}
-                className="absolute bottom-0 left-0 right-0 bg-blue-500"
-              />
-              <Droplet className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 text-white" />
-            </div>
-            <WaterUsageTip usage={waterUsage} />
-          </motion.div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-16 sm:py-20 px-4 sm:px-6 md:px-12 bg-white">
-          <motion.h2
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-2xl sm:text-3xl font-bold text-blue-900 text-center mb-8 sm:mb-12"
-          >
-            Discover Your Water Impact
-          </motion.h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mx-auto max-w-6xl">
-            <FeatureCard
-              icon={<Droplet className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />}
-              title="Daily Water Footprint"
-              description="Calculate and track your daily water usage to make informed decisions."
-            />
-            <FeatureCard
-              icon={<Utensils className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />}
-              title="Food Water Footprint"
-              description="Discover the water footprint of any dish or food product with ease."
-            />
-            <FeatureCard
-              icon={<Camera className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />}
-              title="Image Recognition"
-              description="Upload an image of your meal to instantly calculate its water footprint."
-            />
-          </div>
-        </section>
-
-        {/* Farmers Section */}
-        <section className="bg-blue-100 text-blue-900 py-16 sm:py-20 px-4 sm:px-6 md:px-12">
-          <div className="max-w-4xl mx-auto">
-            <motion.h2
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center"
+    <div className="relative min-h-screen">
+      <div className="absolute inset-0 bg-[url('./assets/Background1.png')] bg-cover bg-center"></div>
+      <div className="relative z-10 ">
+        <Navbar />
+        {/* Hero section */}
+        <div className="relative flex flex-col items-center justify-center md:py-20 px-4 md:px-40 gap-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-center text-blue-950 mb-4">
+            Welcome to Droplet
+          </h1>
+          <p className="text-center text-lg md:text-xl mb-6 max-w-2xl">
+            Empowering farmers, households, and industries with intelligent
+            water solutions. Join Droplet today and lead the way toward a
+            sustainable future in water management.
+          </p>
+          <div className="flex gap-3 mb-8">
+            <Button
+              className="bg-[#00A6ff] hover:bg-[#3ba3db] transition-colors rounded-full hover:scale-[97%] w-32 text-white"
+              onclick={handleSignInClick}
             >
-              <Tractor className="w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3 text-blue-600" />
-              For Farmers
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-lg sm:text-xl mb-6 sm:mb-8"
-            >
-              Optimize your farm's water usage with our specialized tools and
-              insights. Improve crop yields while conserving water resources.
-            </motion.p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-blue-600 text-white font-semibold py-2.5 sm:py-3 px-6 sm:px-8 rounded-full text-base sm:text-lg hover:bg-blue-700 transition-colors flex items-center"
+              Sign In
+            </Button>
+            <Button
+              className="font-semibold bg-transparent text-[#00A6ff] hover:bg-transparent border-2 border-[#00A6ff] rounded-full hover:scale-[97%] w-32"
+              onClick={() => {
+                aboutRef.current?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
               Learn More
-              <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
-            </motion.button>
+            </Button>
           </div>
-        </section>
-
-        <section className="py-24 sm:py-32 bg-blue-50">
-          <div className="max-w-[1020px] mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 text-center mb-6 sm:mb-8">
-              Frequently Asked Questions
-            </h2>
-            <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="text-base sm:text-lg font-semibold text-blue-900 hover:underline">
-                  What is Droplet?
-                </AccordionTrigger>
-                <AccordionContent className="text-blue-700 text-sm sm:text-base">
-                  Droplet is a comprehensive web application designed to promote
-                  water conservation by empowering individuals, communities,
-                  farmers, and industries with data and innovative tools to
-                  track water usage and adopt water-saving practices.
-                </AccordionContent>
-              </AccordionItem>
-              {/* Other AccordionItems remain the same structure */}
-            </Accordion>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="bg-white text-blue-900 py-6 sm:py-8 px-4 sm:px-6 md:px-12">
-          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center"
+          <div className="w-full max-w-4xl">
+            <video
+              autoPlay={true}
+              loop={true}
+              muted={true}
+              className="w-full h-full object-cover border rounded-lg shadow-lg"
             >
-              <Droplet className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 mr-2" />
-              <span className="text-lg sm:text-xl font-bold">Droplet</span>
-            </motion.div>
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                href="#"
-                className="text-sm sm:text-base hover:text-blue-600"
-              >
-                About
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                href="#"
-                className="text-sm sm:text-base hover:text-blue-600"
-              >
-                Contact
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                href="#"
-                className="text-sm sm:text-base hover:text-blue-600"
-              >
-                Privacy Policy
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                href="#"
-                className="text-sm sm:text-base hover:text-blue-600"
-              >
-                Terms of Service
-              </motion.a>
+              <source src={droplet_video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        {/* About section */}
+        <div ref={aboutRef}>
+          <div className="w-full px-4 md:px-40 py-20 bg-gradient-to-br from-blue-100/50 to-white/40">
+            <div className="container flex flex-col md:flex-row items-center mx-auto gap-8">
+              <div className="md:w-1/2 mb-8 md:mb-0 pr-0 md:pr-8">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-950">
+                  About Droplet
+                </h2>
+                <p className="text-lg mb-4 leading-relaxed">
+                  Droplet is an innovative project aimed at revolutionizing
+                  water management across various sectors. Our mission is to
+                  provide smart, efficient, and sustainable water solutions for
+                  farmers, households, and industries.
+                </p>
+                <p className="text-lg leading-relaxed">
+                  By leveraging cutting-edge technology and data-driven
+                  insights, we help our users optimize their water usage, reduce
+                  waste, and contribute to a more sustainable future.
+                </p>
+              </div>
+              <div className="md:w-1/2">
+                <img
+                  src={about}
+                  alt="Droplet Project"
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-lg w-full h-auto"
+                />
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Features section */}
+        <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold text-center text-blue-950 mb-12">
+              Features
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {features.map((feature, index) => (
+                <Card className="overflow-hidden h-full transition-transform duration-300 hover:scale-105">
+                  <img
+                    src={feature.image}
+                    alt={feature.title}
+                    width={600}
+                    height={400}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="">
+                    <CardHeader>
+                      <CardTitle className="text-xl font-semibold text-blue-950">
+                        {feature.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-gray-600">
+                        {feature.description}
+                      </p>
+                    </CardContent>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Industry section */}
+        <div className="w-full flex flex-col items-center justify-center px-4 md:px-40 py-20 bg-gradient-to-br from-blue-100/50 to-white/40">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-950">
+            Visit our Industry Website
+          </h2>
+          <p className="text-lg md:text-xl mb-8 text-center max-w-2xl">
+            It's a one-stop solution for companies to get certified for various
+            food and beverage certificates and track the entire certification
+            process.
+          </p>
+          <Button
+            className="bg-[#00A6ff] hover:bg-[#3ba3db] transition-colors rounded-full hover:scale-[97%] w-40 text-white text-lg"
+            onClick={handleIndustryClick}
+          >
+            Visit Now
+          </Button>
+        </div>
+
+        {/* FAQ section */}
+        <div className="w-full px-4 md:px-40 py-20">
+          <h2 className="text-center text-3xl md:text-4xl font-bold mb-10 text-blue-950">
+            Frequently Asked Questions
+          </h2>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full max-w-3xl mx-auto"
+          >
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="hover:no-underline text-base">
+                What is Droplet?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Droplet is a water footprint tracking app that uses image
+                recognition to calculate the environmental impact of foods,
+                dishes, and crops.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="hover:no-underline text-base">
+                How does it work?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Users can take photos of items, and Droplet analyzes them to
+                estimate water usage based on a vast dataset of water
+                consumption metrics.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="hover:no-underline text-base">
+                What features does it include?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Droplet offers localization support, real-time analysis,
+                detailed reports, and a chatbot to assist users with their water
+                footprint queries.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger className="hover:no-underline text-base">
+                Can Droplet support multiple languages?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Yes, Droplet supports multiple languages, including Hindi,
+                Marathi, and Telugu, ensuring accessibility for a diverse
+                audience.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-5">
+              <AccordionTrigger className="hover:no-underline text-base">
+                Is my data secure?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Absolutely. Droplet ensures all user data is securely stored and
+                processed in compliance with industry standards for data privacy
+                and protection.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-6">
+              <AccordionTrigger className="hover:no-underline text-base">
+                Can I track my progress over time?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Yes, Droplet provides visual reports and timelines to help you
+                monitor and improve your water footprint over time.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-7">
+              <AccordionTrigger className="hover:no-underline text-base">
+                Does Droplet provide suggestions for improvement?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Yes, the app suggests actionable ways to reduce your water usage
+                based on your analysis results and habits.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-8">
+              <AccordionTrigger className="hover:no-underline text-base">
+                What platforms is Droplet available on?
+              </AccordionTrigger>
+              <AccordionContent className="text-black/85">
+                Droplet is available on both web and mobile platforms, ensuring
+                you can track your water footprint anytime, anywhere.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+
+        {/* Footer section */}
+        <footer className="flex items-center justify-between w-full bg-white/50 border-t py-5 px-40">
+          <div className="flex items-center gap-2">
+            <svg
+              width="21"
+              height="21"
+              viewBox="0 0 84 84"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18.5001 65.988C18.5001 64.6169 19.129 62.5974 22.1603 60.7185C22.8595 60.2771 23.7892 60.4998 24.2306 61.199C24.672 61.8982 24.4493 62.8279 23.7501 63.2693C22.3009 64.1677 21.5118 65.1404 21.5118 65.9998C21.5118 68.7107 29.3126 72.4998 42.0118 72.4998C54.711 72.4998 62.5118 68.7107 62.5118 65.9998C62.5118 65.1404 61.711 64.1717 60.2735 63.2693C59.5743 62.8279 59.3516 61.9099 59.793 61.199C60.2344 60.4998 61.1524 60.2771 61.8633 60.7185C64.8828 62.5974 65.5235 64.6287 65.5235 65.988C65.5235 72.1599 53.4145 75.488 42.0235 75.488C30.6285 75.488 18.5001 72.1599 18.5001 65.988ZM68.9301 52.578C68.1488 52.3085 67.2895 52.7187 67.0199 53.4999C66.7503 54.2812 67.1605 55.1405 67.9418 55.4101C75.8129 58.1718 80.5118 62.1289 80.5118 65.9881C80.5118 72.9881 65.0428 80.4881 42.0118 80.4881C18.9808 80.4881 3.51176 72.9881 3.51176 65.9881C3.51176 62.117 8.21096 58.1678 16.0818 55.4101C16.863 55.1406 17.2732 54.2812 17.0036 53.4999C16.7341 52.7187 15.8747 52.3085 15.0934 52.578C5.69504 55.8788 0.523438 60.6366 0.523438 66C0.523438 75.8086 18.7534 83.5 42.0234 83.5C65.2934 83.5 83.5234 75.8086 83.5234 66C83.5 60.6406 78.321 55.871 68.9301 52.578ZM42.0001 55.4882C42.8282 55.4882 43.5001 54.8164 43.5001 53.9882C43.5001 53.1601 42.8282 52.4882 42.0001 52.4882C35.1095 52.4882 29.5001 46.8788 29.5001 39.9882C29.5001 39.1601 28.8282 38.4882 28.0001 38.4882C27.172 38.4882 26.5001 39.1601 26.5001 39.9882C26.5001 48.539 33.4493 55.4882 42.0001 55.4882ZM18.5001 39.6292C18.5001 29.0902 26.0509 16.0782 40.9301 0.938231C41.4887 0.367921 42.5004 0.367921 43.0707 0.938231C57.9497 16.0712 65.5007 29.0902 65.5007 39.6292C65.5007 52.7892 54.9617 63.5002 42.0007 63.5002C29.0397 63.5002 18.5001 52.7812 18.5001 39.6292ZM21.5001 39.6292C21.5001 51.1412 30.6993 60.5002 42.0001 60.5002C53.3009 60.5002 62.5001 51.1408 62.5001 39.6292C62.5001 30.1487 55.6017 18.2192 42.0001 4.14123C28.3981 18.2112 21.5001 30.1492 21.5001 39.6292Z"
+                fill="#00000080"
+              />
+            </svg>
+            <p className="text-base font-medium text-black/50">Droplet</p>
+          </div>
+          <p className="text-base font-medium text-black/50">
+            © 2024 Droplet. All rights reserved
+          </p>
         </footer>
       </div>
       <div className="fixed bottom-6 sm:bottom-10 right-4 sm:right-10 z-50">
-        <Chatbot />
+        <Assistant />
       </div>
     </div>
   );
