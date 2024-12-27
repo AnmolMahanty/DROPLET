@@ -1,4 +1,6 @@
 import React from "react";
+import dropletLogo from "../assets/droplet-logo.svg";
+import languageSvc from "../assets/language.svg";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +26,7 @@ const Navbar = () => {
         onClick={handleHomeClick}
         className="flex items-center gap-2 cursor-pointer"
       >
-        <img src="\src\assets\droplet-logo.svg" alt="droplet-logo" width={26} />
+        <img src={dropletLogo} alt="droplet-logo" width={26} />
         <p className="text-xl font-medium">{t('title.title1')}</p>
       </div>
 
