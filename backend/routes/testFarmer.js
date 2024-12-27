@@ -10,10 +10,9 @@ const testData = {
         5: "5",
         6: "10",
         7: "5",
-        8: "3",
-        9: "Every 3 Days",
-        10: "Every 2 Days",
-        11: "Once a Week"
+        8: "Every 3 Days",
+        9: "Every 2 Days",
+        10: "Once a Week"
     }
 }
 const express = require('express');

@@ -58,7 +58,7 @@ async function generateIrrigationSchedule(jsonData) {
   const motorHorsepower = parseFloat(jsonData["5"]); // Motor power in HP
   const pipeDiameterInches = parseFloat(jsonData["6"]); // Pipe diameter in inches
   const irrigationHoursPerSession = parseFloat(jsonData["7"]); // Hours per session
-  const frequencies = [jsonData["9"], jsonData["10"], jsonData["11"]]; // Phase frequencies
+  const frequencies = [jsonData["8"], jsonData["9"], jsonData["10"]]; // Phase frequencies
   const cropInfo = cropData.find(
     (crop) => crop.Crop.toLowerCase() === cropName.toLowerCase()
   );

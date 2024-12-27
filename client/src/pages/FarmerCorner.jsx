@@ -142,25 +142,20 @@ const DailyCalculator = () => {
               constraints: { min: 0, max: 24 },
             },
             {
-              question: "How often do you irrigate your field in a week?",
-              inputType: "number",
-              constraints: { min: 0, max: 7 },
-            },
-            {
               question:
-                "What is the usual time interval between irrigation sessions during each crop initial(after sowing) phase?",
+                "What is the usual time interval between irrigation sessions during each crop phase: initial phase(after sowing) ?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
             {
               question:
-                "What is the usual time interval between irrigation sessions during each crop growth phase?",
+                "What is the usual time interval between irrigation sessions during each crop phase: growth phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
             {
               question:
-                "What is the usual time interval between irrigation sessions during each crop maturity phase?",
+                "What is the usual time interval between irrigation sessions during each crop phase: maturity phase?",
               inputType: "dropdown",
               options: ["Every 2 Days", "Every 3 Days", "Once a Week"],
             },
