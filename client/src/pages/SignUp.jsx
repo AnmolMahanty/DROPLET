@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import video from "../assets/signin-video.mp4";
-import dropletLogo from "../assets/droplet-logo.svg";
-import googleLogo from "../assets/google.svg";
 import axios from 'axios';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { initializeApp } from "firebase/app";
+import { useTranslation } from 'react-i18next';
+import "@/i18/i18n"
 
 const firebaseConfig = {
   apiKey: "AIzaSyBVmg97HDNoKD2VHDqBQ0BYFj1QlxTiHb8",
@@ -18,6 +18,7 @@ const firebaseConfig = {
 };
 
 const SignUp = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
  
   const handleGoogleSignUp = async () => {
@@ -28,7 +29,7 @@ const SignUp = () => {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-      const response = await axios.post('http://140.245.22.129:3000/auth/signin', { idToken });
+      const response = await axios.post('http://localhost:5000/auth/signin', { idToken });
       const { customToken } = response.data;
       console.log('Custom Token:', customToken);
       if (response.status === 200) {
@@ -51,15 +52,14 @@ const SignUp = () => {
             <div className="flex flex-col items-center justify-center">
               <div className="flex items-center gap-2 cursor-pointer">
                 <img
-                  src={dropletLogo}
+                  src="\src\assets\droplet-logo.svg"
                   alt="droplet-logo"
                   className="w-8 sm:w-12"
                 />
-                <p className="text-2xl sm:text-3xl text-[#2563eb] font-medium">Droplet</p>
+                <p className="text-2xl sm:text-3xl text-[#2563eb] font-medium">{t('title.title1')}</p>
               </div>
               <p className="text-center mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed max-w-sm mx-auto px-2">
-                Join us in building a sustainable future. Track, conserve, and
-                sustain water - every drop counts.
+                {t('signUp.signUp1')}
               </p>
             </div>
             <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
@@ -69,22 +69,22 @@ const SignUp = () => {
                   className="w-full flex items-center justify-center space-x-3 py-2.5 sm:py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   <img
-                    src={googleLogo}
+                    src="src/assets/google.svg"
                     alt="google-logo"
                     className="w-4 h-4 sm:w-5 sm:h-5"
                   />
-                  <span>Sign up with Google</span>
+                  <span>{t('signUp.signUp2')}</span>
                 </button>
               </div>
             </div>
             <div className="mt-4 sm:mt-6 text-center">
               <p className="text-xs sm:text-sm text-gray-600">
-                Already have an account?{" "}
+                {t("signUp.signUp3")}?{" "}
                 <a
                   onClick={handleSignInClick}
                   className="font-medium text-blue-600 hover:text-blue-500 cursor-pointer"
                 >
-                  Sign in
+                  {t('signUp.signUp4')}
                 </a>
               </p>
             </div>
@@ -98,7 +98,7 @@ const SignUp = () => {
             className="absolute w-full h-full inset-0 object-cover"
           >
             <source src={video} type="video/mp4" />
-            Your browser does not support the video tag.
+            {t('signUp.signUp5')}
           </video>
         </div>
       </div>

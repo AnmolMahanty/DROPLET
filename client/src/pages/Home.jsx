@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import { useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import {
   Accordion,
   AccordionContent,
@@ -8,7 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import droplet_video from "../assets/Droplet_video.mp4";
+import droplet_video from "../assets/droplet_video.mp4";
 import Assistant from "../components/Assistant";
 import { useNavigate } from "react-router-dom";
 import about from "../assets/about.jpg";
@@ -17,6 +18,7 @@ import Feature2 from "../assets/Feature2.png";
 import Feature3 from "../assets/Feature3.png";
 
 const Home = () => {
+  const { t, i18n } = useTranslation();
   const aboutRef = useRef(null);
 
   const navigate = useNavigate();
@@ -56,19 +58,17 @@ const Home = () => {
         {/* Hero section */}
         <div className="relative flex flex-col items-center justify-center md:py-20 px-4 md:px-40 gap-4">
           <h1 className="text-4xl md:text-5xl font-bold text-center text-blue-950 mb-4">
-            Welcome to Droplet
+            {t('home.home1')}
           </h1>
           <p className="text-center text-lg md:text-xl mb-6 max-w-2xl">
-            Empowering farmers, households, and industries with intelligent
-            water solutions. Join Droplet today and lead the way toward a
-            sustainable future in water management.
+            {t('home.home2')}
           </p>
           <div className="flex gap-3 mb-8">
             <Button
               className="bg-[#00A6ff] hover:bg-[#3ba3db] transition-colors rounded-full hover:scale-[97%] w-32 text-white"
-              onclick={handleSignInClick}
+              onClick={handleSignInClick}
             >
-              Sign In
+              {t('home.home3')}
             </Button>
             <Button
               className="font-semibold bg-transparent text-[#00A6ff] hover:bg-transparent border-2 border-[#00A6ff] rounded-full hover:scale-[97%] w-32"
@@ -76,7 +76,7 @@ const Home = () => {
                 aboutRef.current?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              Learn More
+              {t('home.home4')}
             </Button>
           </div>
           <div className="w-full max-w-4xl">
@@ -87,7 +87,7 @@ const Home = () => {
               className="w-full h-full object-cover border rounded-lg shadow-lg"
             >
               <source src={droplet_video} type="video/mp4" />
-              Your browser does not support the video tag.
+              {t('home.home5')}
             </video>
           </div>
         </div>
@@ -98,18 +98,13 @@ const Home = () => {
             <div className="container flex flex-col md:flex-row items-center mx-auto gap-8">
               <div className="md:w-1/2 mb-8 md:mb-0 pr-0 md:pr-8">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-950">
-                  About Droplet
+                  {t('home.home6')}
                 </h2>
                 <p className="text-lg mb-4 leading-relaxed">
-                  Droplet is an innovative project aimed at revolutionizing
-                  water management across various sectors. Our mission is to
-                  provide smart, efficient, and sustainable water solutions for
-                  farmers, households, and industries.
+                  {t('home.home7')}
                 </p>
                 <p className="text-lg leading-relaxed">
-                  By leveraging cutting-edge technology and data-driven
-                  insights, we help our users optimize their water usage, reduce
-                  waste, and contribute to a more sustainable future.
+                  {t('home.home8')}
                 </p>
               </div>
               <div className="md:w-1/2">
@@ -132,29 +127,69 @@ const Home = () => {
               Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {features.map((feature, index) => (
-                <Card className="overflow-hidden h-full transition-transform duration-300 hover:scale-105">
-                  <img
-                    src={feature.image}
-                    alt={feature.title}
-                    width={600}
-                    height={400}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="">
-                    <CardHeader>
-                      <CardTitle className="text-xl font-semibold text-blue-950">
-                        {feature.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-600">
-                        {feature.description}
-                      </p>
-                    </CardContent>
-                  </div>
-                </Card>
-              ))}
+              <Card className="overflow-hidden h-full transition-transform duration-300 hover:scale-105">
+                <img
+                  src={Feature1}
+                  alt="Farmer's Corner"
+                  width={600}
+                  height={400}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-semibold text-blue-950">
+                      {t('home.home30')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">
+                      {t('home.home31')}
+                    </p>
+                  </CardContent>
+                </div>
+              </Card>
+              <Card className="overflow-hidden h-full transition-transform duration-300 hover:scale-105">
+                <img
+                  src={Feature2}
+                  alt="Food Calculator"
+                  width={600}
+                  height={400}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-semibold text-blue-950">
+                      {t('home.home32')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">
+                      {t('home.home33')}
+                    </p>
+                  </CardContent>
+                </div>
+              </Card>
+              <Card className="overflow-hidden h-full transition-transform duration-300 hover:scale-105">
+                <img
+                  src={Feature3}
+                  alt="Daily Footprint"
+                  width={600}
+                  height={400}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-semibold text-blue-950">
+                      {t('home.home34')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600">
+                      {t('home.home35')}
+                    </p>
+                  </CardContent>
+                </div>
+              </Card>
             </div>
           </div>
         </section>
@@ -162,25 +197,23 @@ const Home = () => {
         {/* Industry section */}
         <div className="w-full flex flex-col items-center justify-center px-4 md:px-40 py-20 bg-gradient-to-br from-blue-100/50 to-white/40">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-950">
-            Visit our Industry Website
+            {t('home.home9')}
           </h2>
           <p className="text-lg md:text-xl mb-8 text-center max-w-2xl">
-            It's a one-stop solution for companies to get certified for various
-            food and beverage certificates and track the entire certification
-            process.
+            {t('home.home10')}
           </p>
           <Button
             className="bg-[#00A6ff] hover:bg-[#3ba3db] transition-colors rounded-full hover:scale-[97%] w-40 text-white text-lg"
             onClick={handleIndustryClick}
           >
-            Visit Now
+            {t('home.home11')}
           </Button>
         </div>
 
         {/* FAQ section */}
         <div className="w-full px-4 md:px-40 py-20">
           <h2 className="text-center text-3xl md:text-4xl font-bold mb-10 text-blue-950">
-            Frequently Asked Questions
+            {t('home.home12')}
           </h2>
           <Accordion
             type="single"
@@ -189,79 +222,66 @@ const Home = () => {
           >
             <AccordionItem value="item-1">
               <AccordionTrigger className="hover:no-underline text-base">
-                What is Droplet?
+                {t('home.home13')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Droplet is a water footprint tracking app that uses image
-                recognition to calculate the environmental impact of foods,
-                dishes, and crops.
+                {t('home.home14')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger className="hover:no-underline text-base">
-                How does it work?
+                {t('home.home15')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Users can take photos of items, and Droplet analyzes them to
-                estimate water usage based on a vast dataset of water
-                consumption metrics.
+                {t('home.home16')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
               <AccordionTrigger className="hover:no-underline text-base">
-                What features does it include?
+                {t('home.home17')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Droplet offers localization support, real-time analysis,
-                detailed reports, and a chatbot to assist users with their water
-                footprint queries.
+                {t('home.home18')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4">
               <AccordionTrigger className="hover:no-underline text-base">
-                Can Droplet support multiple languages?
+                {t('home.home19')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Yes, Droplet supports multiple languages, including Hindi,
-                Marathi, and Telugu, ensuring accessibility for a diverse
-                audience.
+                {t('home.home20')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-5">
               <AccordionTrigger className="hover:no-underline text-base">
-                Is my data secure?
+                {t('home.home21')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Absolutely. Droplet ensures all user data is securely stored and
-                processed in compliance with industry standards for data privacy
-                and protection.
+                {t('home.home22')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-6">
               <AccordionTrigger className="hover:no-underline text-base">
-                Can I track my progress over time?
+                {t('home.home23')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Yes, Droplet provides visual reports and timelines to help you
-                monitor and improve your water footprint over time.
+                {t('home.home24')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-7">
               <AccordionTrigger className="hover:no-underline text-base">
-                Does Droplet provide suggestions for improvement?
+                {t('home.home25')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Yes, the app suggests actionable ways to reduce your water usage
-                based on your analysis results and habits.
+                {t('home.home26')}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-8">
               <AccordionTrigger className="hover:no-underline text-base">
-                What platforms is Droplet available on?
+                {t('home.home27')}
               </AccordionTrigger>
               <AccordionContent className="text-black/85">
-                Droplet is available on both web and mobile platforms, ensuring
-                you can track your water footprint anytime, anywhere.
+                {t('home.home28')}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -282,10 +302,10 @@ const Home = () => {
                 fill="#00000080"
               />
             </svg>
-            <p className="text-base font-medium text-black/50">Droplet</p>
+            <p className="text-base font-medium text-black/50">{t('title.title1')}</p>
           </div>
           <p className="text-base font-medium text-black/50">
-            © 2024 Droplet. All rights reserved
+            {t('home.home29')}
           </p>
         </footer>
       </div>
